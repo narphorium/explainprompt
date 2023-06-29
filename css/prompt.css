@@ -16,7 +16,7 @@ body {
     position: fixed;
     top: 0;
     left: var(--aside-offset);
-    margin: 32px;
+    margin: 32px 0 32px 32px;
 }
 
 .aside h1 {
@@ -39,6 +39,19 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgb(0 0 0 / 4%);
     margin-top: 24px;
+    font-size: 11pt;
+}
+
+.description p {
+    margin: 0 0 1em 0;
+}
+
+.description p:last-child {
+    margin: 0;
+}
+
+.description a {
+    color: #222;
 }
 
 .prompt-sequence {
@@ -79,7 +92,6 @@ h1 {
 .example,
 .tool-definition {
     padding: 4px;
-    margin: 4px 0;
     border-bottom: 1px solid #ccc;
 }
 

@@ -53,3 +53,23 @@
     0% { background-color: transparent; }
     100% { background-color: rgb(253 235 184); }
 }
+
+button.pulse1 {
+    animation: pulse1 0.3s;
+}
+
+button.pulse2 {
+    animation: pulse2 0.3s;
+}
+
+@keyframes pulse1 {
+    0% { background-color: #e3e3e3; }
+    50% { background-color: #a6a6ab; }
+    100% { background-color: #e3e3e3; }
+}
+
+@keyframes pulse2 {
+    0% { background-color: #e3e3e3; }
+    50% { background-color: #a6a6ab; }
+    100% { background-color: #e3e3e3; }
+}

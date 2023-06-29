@@ -1,17 +1,31 @@
 <html>
 <head>
-    <title>Zero-Shot Plan-and-Solve</title>
+    <title>Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models</title>
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../css/prompt.css">
+    <link rel="stylesheet" href="../../../css/walkthrough.css">
+    
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script src="../../../js/walkthrough.js"></script>
 </head>
 <body>
+<div class="aside">
+    <h1>Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models</h1>
+    <div class="citation">
+        <div class="authors">Lei Wang, Wanyu Xu, Yihuai Lan, Zhiqiang Hu, Yunshi Lan, Roy Ka-Wei Lee, Ee-Peng Lim</div>
+        <a target="_blank" href="http://arxiv.org/abs/2305.04091">arXiv:2305.04091</a> (<span class="year">2023</span>)
+    </div>
+    <div id="controls"></div>
+    <div id="description" class="description">This is the description</div>
+</div>
 <div class="prompt-sequence">
-    <h1>Zero-Shot Plan-and-Solve</h1>
-    <div class="section">Conversation</div>
     <div class="conversation">
         <div class="response">
             <div class="question"><em>Q:</em> Jesse’s rooms are 19 feet long and 18 feet wide. If she has 20 rooms in all. How much carpet does she need to cover the floors of all rooms?</div>
         </div>
-        <details class="prompt" open>
+        <details class="prompt">
             <summary>Planning Prompt</summary>
             <div>
                 <em>Q:</em> Jesse’s rooms are 19 feet long and 18 feet wide. If she has 20 rooms in all. How much carpet does she need to cover the floors of all rooms?<br/>
