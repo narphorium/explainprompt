@@ -81,11 +81,16 @@ function openDetail(detail) {
     const is_open = detail.hasAttribute('open');
     detail.setAttribute('prev-open', is_open);
     detail.setAttribute('open', 'true');
+}
 
+function openParentDetails(detail) {
     let parent = detail.parentNode.closest('details');
     console.log('parent', parent);
     if (parent && parent != detail) {
-        openDetail(parent);
+        const is_open = parent.hasAttribute('open');
+        parent.setAttribute('prev-open', is_open);
+        parent.setAttribute('open', 'true');
+        openParentDetails(parent);
     }
 }
 
@@ -106,9 +111,7 @@ function closeDetail(detail) {
       this.description.innerHTML = this.description_by_step[this.current_step]['description'];
 
       document.querySelectorAll('details').forEach((detail) => {
-        if (detail.dataset.step == this.current_step) {
-            openDetail(detail);
-        } else if (detail.hasAttribute('prev-open')) {
+        if (detail.dataset.step != this.current_step && detail.hasAttribute('prev-open')) {
             closeDetail(detail);
         }
       })
@@ -116,6 +119,10 @@ function closeDetail(detail) {
       document.querySelectorAll('*[data-step]').forEach((mark) => {
         if (mark.dataset.step == this.current_step) {
           mark.classList.add('selected');
+          if (mark.tagName == 'DETAILS') {
+            openDetail(mark);
+          }
+          openParentDetails(mark);
           window.scrollTo({
             top: mark.offsetTop - 100,
             behavior: "smooth"
