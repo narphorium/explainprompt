@@ -1,14 +1,41 @@
 <html>
 <head>
-    <title>Few-Shot Reflexion</title>
+    <title>Reflexion: Language Agents with Verbal Reinforcement Learning</title>
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../css/prompt.css">
-</head><body>
+    <link rel="stylesheet" href="../../../css/walkthrough.css">
+    
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script src="../../../js/walkthrough.js"></script>
+</head>
+<body>
+<div class="aside">
+    <h1>Reflexion: Language Agents with Verbal Reinforcement Learning</h1>
+    <div class="citation">
+        <div class="authors">Noah Shinn, Federico Cassano, Beck Labash, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao</div>
+        <a href="http://arxiv.org/abs/2303.11366">arXiv:2303.11366</a> (<span class="year">2023</span>)
+    </div>
+    <div id="controls"></div>
+    <div id="description" class="description">This is the description</div>
+</div>
+<script>
+    var data = {
+        'steps': [{
+            'description': 'Step 1',
+        },{
+            'description': 'Step 2',
+        },{
+            'description': 'Step 3',
+        }]
+    };
+    new Walkthrough(document.getElementById('controls'), data);
+</script>
 <div class="prompt-sequence">
-    <h1>Few-Shot Reflexion</h1>
-    <div class="section">Trial #1</div>
+    
     <div class="conversation">
-        <div class="response">
+        <div class="response" data-step="0">
             <div class="question"><em>Question:</em> Grown-Ups starred the actor who was best known for which role on "’Allo ’Allo!"?</div>
         </div>
         <details class="prompt">
@@ -17,7 +44,7 @@
             Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:<br/>
             </div>
             <div class="tool-definitions">
-            <details class="tool-definition">
+            <details class="tool-definition" data-step="1">
                 <summary>Search Tool</summary>
                 <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
             </details>
@@ -88,7 +115,7 @@
             </div>
         </details>
         <div class="response">
-            <div class="thought"><em>Thought 1:</em> I need to search Grown-Ups and "’Allo ’Allo!", find the actor who starred in Grown-Ups, then find the role he was best known for in "’Allo ’Allo!".</div>
+            <div class="thought"><em>Thought 1:</em> <mark data-step="2">I need to search Grown-Ups and "’Allo ’Allo!", find the actor who starred in Grown-Ups, then find the role he was best known for in "’Allo ’Allo!".</mark></div>
             <div class="action"><em>Action 1:</em> <span class="tool">Search[Grown-Ups]</span></div>
         </div>
         <div class="tool-response">
@@ -456,7 +483,6 @@
             <div class="reflection"><em>Reflection:</em> I searched the wrong title for the show, "’Allo ’Allo!", which resulted in no results. I should have searched the show’s main character, Gorden Kaye, to find the role he was best known for in the show.</div>
         </div>
     </div>
-    <div class="section">Trial #2</div>
     <div class="conversation">
         <div class="response">
             <div class="question"><em>Question:</em> Grown-Ups starred the actor who was best known for which role on "’Allo ’Allo!"?</div>

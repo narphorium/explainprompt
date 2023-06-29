@@ -1,0 +1,55 @@
+#controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#position {
+    vertical-align: top;
+    line-height: 26px;
+    margin: 0 1em;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+}
+
+#controls button {
+    border: 0;
+    background-color: #e3e3e3;
+    border-radius: 24px;
+    color: #6e7071;
+    margin: 0 2px;
+  }
+  
+  #controls button:hover {
+    background-color: #a6a6ab;
+    color: white;
+  }
+  
+  #controls button:focus {
+    outline: 0;
+  }
+
+  .visible {
+    display: block !important;
+  }
+  
+  mark {
+    background-color: transparent;
+  }
+  
+  mark:hover {
+    cursor: pointer;
+  }
+  
+.selected {
+    background-color: rgb(253 235 184);
+    animation: fadeIn 1.0s;
+}
+
+.response.selected {
+    border-color: rgb(237 211 137);
+}
+  
+@keyframes fadeIn {
+    0% { background-color: transparent; }
+    100% { background-color: rgb(253 235 184); }
+}
