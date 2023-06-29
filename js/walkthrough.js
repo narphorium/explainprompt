@@ -8,27 +8,41 @@ function buildButton(iconName, onclick) {
     button.onclick = onclick;
     return button;
   }
+
+  function pulseButton(button) {
+    if (button.classList.contains('pulse1')) {
+        button.classList.remove('pulse1');
+        button.classList.add('pulse2');
+    } else {
+        button.classList.remove('pulse2');
+        button.classList.add('pulse1');
+    }
+}
   
   function Walkthrough(controls, data) {
     this.description_by_step = data['steps'];
     this.current_step = 0;
     this.num_steps = data['steps'].length;
   
-    controls.appendChild(buildButton('first_page', () => {
-      this.goto(0);
-    }));
-    controls.appendChild(buildButton('chevron_left', () => {
-      this.goto(this.current_step - 1);
-    }));
+    this.first_button = buildButton('first_page', () => {
+        this.goto(0);
+    });
+    this.last_button = buildButton('last_page', () => {
+        this.goto(this.num_steps-1);
+    });
+    this.prev_button = buildButton('chevron_left', () => {
+        this.goto(this.current_step - 1);
+    });
+    this.next_button = buildButton('chevron_right', () => {
+        this.goto(this.current_step + 1);
+      })
+    controls.appendChild(this.first_button);
+    controls.appendChild(this.prev_button);
     this.position = document.createElement('span');
     this.position.setAttribute('id', 'position');
     controls.appendChild(this.position);
-    controls.appendChild(buildButton('chevron_right', () => {
-      this.goto(this.current_step + 1);
-    }));
-    controls.appendChild(buildButton('last_page', () => {
-      this.goto(this.num_steps-1);
-    }));
+    controls.appendChild(this.next_button);
+    controls.appendChild(this.last_button);
 
     this.description = document.getElementById('description');
   
@@ -47,6 +61,7 @@ function buildButton(iconName, onclick) {
         case 'right':
         case 'space':
           this.goto(this.current_step + 1);
+          pulseButton(this.next_button);
           break;
         case 'p':
         case 'up':
@@ -54,12 +69,15 @@ function buildButton(iconName, onclick) {
         case 'left':
         case 'backspace':
           this.goto(this.current_step - 1);
+          pulseButton(this.prev_button);
           break;
         case 'home':
           this.goto(0);
+          pulseButton(this.first_button);
           break;
         case 'end':
           this.goto(this.num_steps - 1);
+          pulseButton(this.last_button);
           break;
       }
       event.stopPropagation();
@@ -85,7 +103,6 @@ function openDetail(detail) {
 
 function openParentDetails(detail) {
     let parent = detail.parentNode.closest('details');
-    console.log('parent', parent);
     if (parent && parent != detail) {
         const is_open = parent.hasAttribute('open');
         parent.setAttribute('prev-open', is_open);
