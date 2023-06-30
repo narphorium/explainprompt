@@ -18,21 +18,16 @@
         <a target="_blank" href="http://arxiv.org/abs/2201.11903">arXiv:2201.11903</a> (<span class="year">2022</span>)
     </div>
     <div id="controls"></div>
-    <div id="description" class="description">This is the description</div>
+    <div class="description" data-step="0">This is a sample question from the <a target="_blank" href="https://github.com/openai/grade-school-math">GSM8K dataset</a> which was used to evaluate Chain of Thought prompting on multi-step mathematical reasoning tasks.</div>
+    <div class="description" data-step="1">
+        <p>The few-shot prompt starts with 9 example question/answer pairs which demonstrate Chain of Thought reasoning. This shows the model how it should format it's answer.</p>
+        <p>In the paper they also finetune a model which can do Chain of Thought reasoning without the examples in the prompt and that model gets even better results.</p>
+    </div>
+    <div class="description" data-step="2">The end of the prompt is the question we want the model to answer followed by "A:" to indicate the start of the answer.</div>
+    <div class="description" data-step="3">When the model answers, it uses Chain of Thought reasoning before coming up with the final answer.</div>
 </div>
 <script>
-    var data = {
-        'steps': [{
-            'description': 'This is a sample question from the <a target="_blank" href="https://github.com/openai/grade-school-math">GSM8K dataset</a> which was used to evaluate Chain of Thought prompting on multi-step mathematical reasoning tasks.',
-        },{
-            'description': '<p>The few-shot prompt starts with 9 example question/answer pairs which demonstrate Chain of Thought reasoning. This shows the model how it should format it\'s answer.</p><p>In the paper they also finetune a model which can do Chain of Thought reasoning without the examples in the prompt and that model gets even better results.</p>',
-        },{
-            'description': 'The end of the prompt is the question we want the model to answer followed by "A:" to indicate the start of the answer.',
-        },{
-            'description': 'When the model answers, it uses Chain of Thought reasoning before coming up with the final answer.',
-        }]
-    };
-    new Walkthrough(document.getElementById('controls'), data);
+    new Walkthrough(document.getElementById('controls'));
 </script>
 <div class="prompt-sequence">
     <div class="conversation">

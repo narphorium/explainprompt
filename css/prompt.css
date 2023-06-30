@@ -34,12 +34,18 @@ body {
 }
 
 .aside .description {
+    display: none;
     background-color: rgb(253 235 184);
     padding: 1em;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgb(0 0 0 / 4%);
     margin-top: 24px;
     font-size: 11pt;
+}
+
+.aside .description.selected {
+    display: block;
+    animation: none;
 }
 
 .description p {

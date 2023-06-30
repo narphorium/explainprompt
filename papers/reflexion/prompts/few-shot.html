@@ -18,19 +18,12 @@
         <a href="http://arxiv.org/abs/2303.11366">arXiv:2303.11366</a> (<span class="year">2023</span>)
     </div>
     <div id="controls"></div>
-    <div id="description" class="description">This is the description</div>
+    <div  class="description" data-step="0">Step 1</div>
+    <div  class="description" data-step="1">Step 2</div>
+    <div  class="description" data-step="2">Step 3</div>
 </div>
 <script>
-    var data = {
-        'steps': [{
-            'description': 'Step 1',
-        },{
-            'description': 'Step 2',
-        },{
-            'description': 'Step 3',
-        }]
-    };
-    new Walkthrough(document.getElementById('controls'), data);
+    new Walkthrough(document.getElementById('controls'));
 </script>
 <div class="prompt-sequence">
     
