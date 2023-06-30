@@ -19,10 +19,8 @@ function buildButton(iconName, onclick) {
     }
 }
   
-  function Walkthrough(controls, data) {
-    this.description_by_step = data['steps'];
-    this.current_step = 0;
-    this.num_steps = data['steps'].length;
+  function Walkthrough(controls) {
+    this.current_step = -1;
   
     this.first_button = buildButton('first_page', () => {
         this.goto(0);
@@ -85,12 +83,17 @@ function buildButton(iconName, onclick) {
     });
   
     window.addEventListener('load',  () => {
-      document.querySelectorAll('mark').forEach((mark) => {
-        mark.addEventListener('click', (el, e) => {
-          this.goto(parseInt(mark.dataset.step));
-        }, true)
-      });
-      this.goto(0);
+        const step_data = document.querySelectorAll('.prompt-sequence *[data-step]');
+        step_data.forEach((mark) => {
+            mark.addEventListener('click', (e) => {
+                if (mark.dataset.step != this.current_step) {
+                    e.preventDefault();
+                }
+                this.goto(parseInt(mark.dataset.step));
+            });
+        });
+        this.num_steps = step_data.length;
+        this.goto(0);
     });
     
   }
@@ -122,10 +125,9 @@ function closeDetail(detail) {
 }
   
   Walkthrough.prototype.goto = function(step) {
-    if (step >= 0 && step < this.num_steps) {
+    if (step >= 0 && step < this.num_steps && step != this.current_step) {
       this.current_step = step;
       this.position.innerText = (this.current_step + 1) + ' of ' + this.num_steps;
-      this.description.innerHTML = this.description_by_step[this.current_step]['description'];
 
       document.querySelectorAll('details').forEach((detail) => {
         if (detail.dataset.step != this.current_step && detail.hasAttribute('prev-open')) {
@@ -133,20 +135,27 @@ function closeDetail(detail) {
         }
       })
 
-      document.querySelectorAll('*[data-step]').forEach((mark) => {
+      var scroll_target = Number.MAX_SAFE_INTEGER;
+      document.querySelectorAll('.prompt-sequence *[data-step]').forEach((mark) => {
         if (mark.dataset.step == this.current_step) {
           mark.classList.add('selected');
           if (mark.tagName == 'DETAILS') {
             openDetail(mark);
           }
           openParentDetails(mark);
-          window.scrollTo({
-            top: mark.offsetTop - 100,
-            behavior: "smooth"
-          });
+          scroll_target = Math.min(scroll_target, mark.offsetTop - 200);
         } else {
             mark.classList.remove('selected');
         }
-      })
+      });
+      window.scrollTo({top: scroll_target, behavior: "smooth"});
+
+      document.querySelectorAll('.aside *[data-step]').forEach((mark) => {
+        if (mark.dataset.step == this.current_step) {
+          mark.classList.add('selected');
+        } else {
+            mark.classList.remove('selected');
+        }
+      });
     }
   }

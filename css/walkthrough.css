@@ -36,7 +36,7 @@
     background-color: transparent;
   }
   
-  mark:hover {
+*[data-step]:hover {
     cursor: pointer;
   }
   
