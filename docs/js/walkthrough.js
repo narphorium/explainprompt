@@ -84,8 +84,9 @@ function buildButton(iconName, title, onclick) {
     });
   
     window.addEventListener('load',  () => {
-        const step_data = document.querySelectorAll('.trajectory *[data-step]');
-        step_data.forEach((mark) => {
+        this.num_steps = 0;
+        document.querySelectorAll('.trajectory *[data-step]').forEach((mark) => {
+            this.num_steps = Math.max(this.num_steps, parseInt(mark.dataset.step) + 1);
             mark.addEventListener('click', (e) => {
                 if (mark.dataset.step != this.current_step) {
                     e.preventDefault();
@@ -93,7 +94,6 @@ function buildButton(iconName, title, onclick) {
                 this.goto(parseInt(mark.dataset.step));
             });
         });
-        this.num_steps = step_data.length;
         this.goto(0);
     });
     
