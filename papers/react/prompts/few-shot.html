@@ -1,0 +1,567 @@
+<html>
+<head>
+    <title>ReAct: Synergizing Reasoning and Acting in Language Models</title>
+    
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../css/walkthrough.css">
+    
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script src="../../../js/walkthrough.js"></script>
+</head><body>
+<div class="aside">
+    <h1>ReAct: Synergizing Reasoning and Acting in Language Models</h1>
+    <div class="citation">
+        <span class="authors">Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, Yuan Cao</span>
+        <a target="_blank" href="http://arxiv.org/abs/2210.03629">arXiv:2210.03629</a> (<span class="year">2022</span>)
+        <a target="_blank" href="https://github.com/ysymyth/ReAct/"><i class="codicon codicon-github-inverted"></i></a>
+    </div>
+    <div id="controls"></div>
+    <div class="description" data-step="0">This is the sample question from the <a target="_blank" href="https://hotpotqa.github.io">HotpotQA dataset</a> which was used to evaluate ReAct prompting on question answering tasks.</div>
+    <div class="description" data-step="1">The prompt starts with instructions for the model to follow the Thought, Action, Observation cycle of ReAct prompting, followed by a list of available tools.</div>
+    <div class="description" data-step="2">Each tool definition shows how to call the tool and describes when that tool should be used. This is how the model decides which tool to use to answer the input question.</div>
+    <div class="description" data-step="3">After the tools are defined, there are 6 few-shot examples which show the model example ReAct prompting trajectories being used to answer questions.</div>
+    <div class="description" data-step="4">Each example follows the format of a multiple cycles of Thoughts, Actions, and Observations. Each example end with a call to the <span class="tool">Finish[]</span> tool.</div>
+    <div class="description" data-step="5">The last part of the prompt is the input question. You can think of this as the start of the 7th few-shot example. This helps makes it easy for the model to continue with the same style of ReAct propting that it has just seen.</div>
+    <div class="description" data-step="6">Each ReAct cycle starts with a Thought. Here the model recognizes that the question is about the Apple Remote and decides that it should use the Search tool to get more information about the Apple Remote.</div>
+    <div class="description tool" data-step="7">The <span class="tool">Search[]</span> tool takes a single text argument and searches Wikipedia for that term. The tool returns the first 5 sentences of text from the first matching result.</div>
+    <div class="description tool" data-step="8">Here we can see the Wikipedia description of the Apple Remote.</div>
+    <div class="description" data-step="9">In the next cycle of prompting, the outputs from the previous cycle get added to the end of the prompt as a form of short-term memory. This is what enables the model to reflect on the outputs of the previous action and use that information when it decides on the next action to take.</div>
+    <div class="description" data-step="10">Here we can see that the model accurately parsed the output from the previous <span class="tool">Search[Apple Remote]</span> action and has used hat information to plan it's next action which is to <span class="tool">Search[Front Row]</span></div>
+    <div class="description tool" data-step="11">This is the response that the <span class="tool">Search</span> tool returns when there is no exact match on Wikipedia. These are the recommended similar pages as shown in Wikipedia search UI. Having helpful error messages like this are what allows ReAct prompting to recover from errors and explore alternative solutions.</div>
+    <div class="description" data-step="12">Here we can see that the model has parsed the error message and decided to attempt <span class="tool">Search[Front Row (software)]</span> instead. Notice that this was not the top recommendation that Wikipedia Search returned but the model was able to pick the correct recommendation by using the conversation history in the prompt to infer that the software company is the right choice.</div>
+    <div class="description tool" data-step="13">Here are the first 5 sentences from the "Front Row (software)" Wikipedia page.</div>
+    <div class="description" data-step="14">The model is able to accurately parse the description of "Front Row (software)" and infer that the answer to the original input question is "keyboard function keys".</div>
+    <div class="description tool" data-step="15">To end the ReAct prompting loop, the model calls the <span class="tool">Finish[keyboard function keys]</span> tool. This also provides a nice way of capturing the final answer in a concise form which can be matched against the expected answer from the evaluation dataset without having to parse it out of the full-sentence answer in the previous thought.</div>
+</div>
+<script>
+    new Walkthrough(document.getElementById('controls'));
+</script>
+<div class="trajectory">
+    <div class="conversation">
+        <div class="response" data-step="0">
+            <div class="question"><em>Question:</em> Aside from the Apple Remote, what other device can control the program App Remote was originally designed to interact with?</div>
+        </div>
+        <details class="prompt">
+            <summary>Prompt</summary>
+            <div><mark data-step="1">Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</mark></div>
+            <div class="tool-definitions">
+                <details class="tool-definition" data-step="2">
+                    <summary>Search Tool</summary>
+                    <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Lookup Tool</summary>
+                    <div>(2) Lookup[keyword], which returns the next sentence containing keyword in the current passage.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Finish Tool</summary>
+                    <div>(3) Finish[answer], which returns the answer and finishes the task.</div>
+                </details>
+            </div>
+            <div><mark data-step="3">Here are some examples.</mark></div>
+            <div class="examples">
+                <details class="example" data-step="4">
+                    <summary>Example 1</summary>
+                    <div>
+                        <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+                        <em>Thought 1:</em> I need to search Colorado orogeny, find the area that the eastern sector of the Colorado orogeny extends into, then find the elevation range of the area.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Colorado orogeny]</span><br/>
+                        <em>Observation 1:</em> The Colorado orogeny was an episode of mountain building (an orogeny) in Colorado and surrounding areas.<br/>
+                        <em>Thought 2:</em> It does not mention the eastern sector. So I need to look up eastern sector.<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[eastern sector]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) The eastern sector extends into the High Plains and is called the Central Plains orogeny.<br/>
+                        <em>Thought 3:</em> The eastern sector of Colorado orogeny extends into the High Plains. So I need to search High Plains and find its elevation range.<br/>
+                        <em>Action 3:</em> <span class="tool">Search[High Plains]</span><br/>
+                        <em>Observation 3:</em> High Plains refers to one of two distinct land regions<br/>
+                        <em>Thought 4:</em> I need to instead search High Plains (United States).<br/>
+                        <em>Action 4:</em> <span class="tool">Search[High Plains (United States)]</span><br/>
+                        <em>Observation 4:</em> The High Plains are a subregion of the Great Plains. From east to west, the High Plains rise in elevation from around 1,800 to 7,000 ft (550 to 2,130 m).[3]<br/>
+                        <em>Thought 5:</em>  High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.<br/>
+                        <em>Action 5:</em> <span class="tool">Finish[1,800 to 7,000 ft]</span>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 2</summary>
+                    <div>
+                        <em>Question:</em> Musician and satirist Allie Goertz wrote a song about the "The Simpsons"  character Milhouse, who Matt Groening named after who?<br/>
+                        <em>Thought 1:</em> The question simplifies to "The Simpsons" character Milhouse is named after who. I only need to search Milhouse and find who it is named after.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Milhouse]</span><br/>
+                        <em>Observation 1:</em> Milhouse Mussolini Van Houten is a recurring character in the Fox animated television series The Simpsons voiced by Pamela Hayden and created by Matt Groening.<br/>
+                        <em>Thought 2:</em> The paragraph does not tell who Milhouse is named after, maybe I can look up "named after".<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[named after]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous.<br/>
+                        <em>Thought 3:</em> Milhouse was named after U.S. president Richard Nixon, so the answer is Richard Nixon.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Richard Nixon]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 3</summary>
+                    <div>
+                        <em>Question:</em> Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?<br/>
+                        <em>Thought 1:</em> I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Adam Clayton Powell]</span><br/>
+                        <em>Observation 1:</em> Could not find [Adam Clayton Powell]. Similar: [’Adam Clayton Powell III’, ’Seventh Avenue (Manhattan)’, ’Adam Clayton Powell Jr. State Office Building’, ’Isabel Washington Powell’, ’Adam Powell’, ’Adam Clayton Powell (film)’, ’Giancarlo Esposito’].<br/>
+                        <em>Thought 2:</em> To find the documentary, I can search Adam Clayton Powell (film).<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Adam Clayton Powell (film)]</span><br/>
+                        <em>Observation 2:</em> Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg. The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.<br/>
+                        <em>Thought 3:</em> Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[The Saimaa Gesture]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 4</summary>
+                    <div>
+                        <em>Question:</em> What profession does Nicholas Ray and Elia Kazan have in common?<br/>
+                        <em>Thought 1:</em> I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Nicholas Ray]</span><br/>
+                        <em>Observation 1:</em> Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.<br/>
+                        <em>Thought 2:</em> Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Elia Kazan]</span><br/>
+                        <em>Observation 2:</em> Elia Kazan was an American film and theatre director, producer, screenwriter and actor.<br/>
+                        <em>Thought 3:</em> Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[director, screenwriter, actor]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 5</summary>
+                    <div>
+                        <em>Question:</em> Which magazine was started first Arthur’s Magazine or First for Women?<br/>
+                        <em>Thought 1:</em> I need to search Arthur’s Magazine and First for Women, and find which was started first.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Arthur’s Magazine]</span><br/>
+                        <em>Observation 1:</em> Arthur’s Magazine (1844-1846) was an American literary periodical published in Philadelphia in the 19th century.<br/>
+                        <em>Thought 2:</em> Arthur’s Magazine was started in 1844. I need to search First for Women next.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[First for Women]</span><br/>
+                        <em>Observation 2:</em> First for Women is a woman’s magazine published by Bauer Media Group in the USA.[1] The magazine was started in 1989.<br/>
+                        <em>Thought 3:</em> First for Women was started in 1989. 1844 (Arthur’s Magazine) < 1989 (First for Women), so Arthur’s Magazine was started first.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Arthur’s Magazine]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 6</summary>
+                    <div>
+                        <em>Question:</em> Were Pavel Urysohn and Leonid Levin known for the same type of work?<br/>
+                        <em>Thought 1:</em> I need to search Pavel Urysohn and Leonid Levin, find their types of work, then find if they are the same.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Pavel Urysohn]</span><br/>
+                        <em>Observation 1:</em> Pavel Samuilovich Urysohn (February 3, 1898 - August 17, 1924) was a Soviet mathematician who is best known for his contributions in dimension theory.<br/>
+                        <em>Thought 2:</em> Pavel Urysohn is a mathematician. I need to search Leonid Levin next and find its type of work.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Leonid Levin]</span><br/>
+                        <em>Observation 2:</em> Leonid Anatolievich Levin is a Soviet-American mathematician and computer scientist.<br/>
+                        <em>Thought 3:</em> Leonid Levin is a mathematician and computer scientist. So Pavel Urysohn and Leonid Levin have the same type of work.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[yes]</span><br/>
+                    </div>
+                </details>
+            </div>
+            <div><mark data-step="5"><em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?</mark></div>
+        </details>
+        <div class="response">
+            <div class="thought"><mark data-step="6"><em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.</mark></div>
+            <div class="action"><em>Action 1:</em> <span class="tool" data-step="7">Search[Apple Remote]</span></div>
+        </div>
+        <div class="tool-response" data-step="8">
+            <div class="observation"><em>Observation 1:</em> The Apple Remote is a remote control introduced in October 2005 by Apple Inc. for use with a number of its products with infrared capability. It was originally designed to control the Front Row media center program on the iMac G5 and is compatible with many subsequent Macintosh computers. The first three generations of Apple TV used the Apple Remote as their primary control mechanism. It has now been replaced with the Siri Remote in the fourth generation.</div>
+        </div>
+        <details class="prompt">
+            <summary>Prompt</summary>
+            <div>Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</div>
+            <div class="tool-definitions">
+                <details class="tool-definition">
+                    <summary>Search Tool</summary>
+                    <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Lookup Tool</summary>
+                    <div>(2) Lookup[keyword], which returns the next sentence containing keyword in the current passage.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Finish Tool</summary>
+                    <div>(3) Finish[answer], which returns the answer and finishes the task.</div>
+                </details>
+            </div>
+            <div>Here are some examples.</div>
+            <div class="examples">
+                <details class="example">
+                    <summary>Example 1</summary>
+                    <div>
+                        <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+                        <em>Thought 1:</em> I need to search Colorado orogeny, find the area that the eastern sector of the Colorado orogeny extends into, then find the elevation range of the area.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Colorado orogeny]</span><br/>
+                        <em>Observation 1:</em> The Colorado orogeny was an episode of mountain building (an orogeny) in Colorado and surrounding areas.<br/>
+                        <em>Thought 2:</em> It does not mention the eastern sector. So I need to look up eastern sector.<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[eastern sector]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) The eastern sector extends into the High Plains and is called the Central Plains orogeny.<br/>
+                        <em>Thought 3:</em> The eastern sector of Colorado orogeny extends into the High Plains. So I need to search High Plains and find its elevation range.<br/>
+                        <em>Action 3:</em> <span class="tool">Search[High Plains]</span><br/>
+                        <em>Observation 3:</em> High Plains refers to one of two distinct land regions<br/>
+                        <em>Thought 4:</em> I need to instead search High Plains (United States).<br/>
+                        <em>Action 4:</em> <span class="tool">Search[High Plains (United States)]</span><br/>
+                        <em>Observation 4:</em> The High Plains are a subregion of the Great Plains. From east to west, the High Plains rise in elevation from around 1,800 to 7,000 ft (550 to 2,130 m).[3]<br/>
+                        <em>Thought 5:</em>  High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.<br/>
+                        <em>Action 5:</em> <span class="tool">Finish[1,800 to 7,000 ft]</span>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 2</summary>
+                    <div>
+                        <em>Question:</em> Musician and satirist Allie Goertz wrote a song about the "The Simpsons"  character Milhouse, who Matt Groening named after who?<br/>
+                        <em>Thought 1:</em> The question simplifies to "The Simpsons" character Milhouse is named after who. I only need to search Milhouse and find who it is named after.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Milhouse]</span><br/>
+                        <em>Observation 1:</em> Milhouse Mussolini Van Houten is a recurring character in the Fox animated television series The Simpsons voiced by Pamela Hayden and created by Matt Groening.<br/>
+                        <em>Thought 2:</em> The paragraph does not tell who Milhouse is named after, maybe I can look up "named after".<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[named after]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous.<br/>
+                        <em>Thought 3:</em> Milhouse was named after U.S. president Richard Nixon, so the answer is Richard Nixon.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Richard Nixon]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 3</summary>
+                    <div>
+                        <em>Question:</em> Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?<br/>
+                        <em>Thought 1:</em> I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Adam Clayton Powell]</span><br/>
+                        <em>Observation 1:</em> Could not find [Adam Clayton Powell]. Similar: [’Adam Clayton Powell III’, ’Seventh Avenue (Manhattan)’, ’Adam Clayton Powell Jr. State Office Building’, ’Isabel Washington Powell’, ’Adam Powell’, ’Adam Clayton Powell (film)’, ’Giancarlo Esposito’].<br/>
+                        <em>Thought 2:</em> To find the documentary, I can search Adam Clayton Powell (film).<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Adam Clayton Powell (film)]</span><br/>
+                        <em>Observation 2:</em> Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg. The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.<br/>
+                        <em>Thought 3:</em> Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[The Saimaa Gesture]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 4</summary>
+                    <div>
+                        <em>Question:</em> What profession does Nicholas Ray and Elia Kazan have in common?<br/>
+                        <em>Thought 1:</em> I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Nicholas Ray]</span><br/>
+                        <em>Observation 1:</em> Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.<br/>
+                        <em>Thought 2:</em> Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Elia Kazan]</span><br/>
+                        <em>Observation 2:</em> Elia Kazan was an American film and theatre director, producer, screenwriter and actor.<br/>
+                        <em>Thought 3:</em> Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[director, screenwriter, actor]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 5</summary>
+                    <div>
+                        <em>Question:</em> Which magazine was started first Arthur’s Magazine or First for Women?<br/>
+                        <em>Thought 1:</em> I need to search Arthur’s Magazine and First for Women, and find which was started first.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Arthur’s Magazine]</span><br/>
+                        <em>Observation 1:</em> Arthur’s Magazine (1844-1846) was an American literary periodical published in Philadelphia in the 19th century.<br/>
+                        <em>Thought 2:</em> Arthur’s Magazine was started in 1844. I need to search First for Women next.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[First for Women]</span><br/>
+                        <em>Observation 2:</em> First for Women is a woman’s magazine published by Bauer Media Group in the USA.[1] The magazine was started in 1989.<br/>
+                        <em>Thought 3:</em> First for Women was started in 1989. 1844 (Arthur’s Magazine) < 1989 (First for Women), so Arthur’s Magazine was started first.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Arthur’s Magazine]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 6</summary>
+                    <div>
+                        <em>Question:</em> Were Pavel Urysohn and Leonid Levin known for the same type of work?<br/>
+                        <em>Thought 1:</em> I need to search Pavel Urysohn and Leonid Levin, find their types of work, then find if they are the same.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Pavel Urysohn]</span><br/>
+                        <em>Observation 1:</em> Pavel Samuilovich Urysohn (February 3, 1898 - August 17, 1924) was a Soviet mathematician who is best known for his contributions in dimension theory.<br/>
+                        <em>Thought 2:</em> Pavel Urysohn is a mathematician. I need to search Leonid Levin next and find its type of work.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Leonid Levin]</span><br/>
+                        <em>Observation 2:</em> Leonid Anatolievich Levin is a Soviet-American mathematician and computer scientist.<br/>
+                        <em>Thought 3:</em> Leonid Levin is a mathematician and computer scientist. So Pavel Urysohn and Leonid Levin have the same type of work.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[yes]</span><br/>
+                    </div>
+                </details>
+            </div>
+            <div>
+                <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+            </div>
+            <details class="scratchpad" data-step="9">
+                <summary>Scratchpad</summary>
+                <div>
+                    <em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.<br/>
+                    <em>Action 1:</em> <span class="tool">Search[Apple Remote]</span><br/>
+                    <em>Observation 1:</em> The Apple Remote is a remote control introduced in October 2005 by Apple Inc. for use with a number of its products with infrared capability. It was originally designed to control the Front Row media center program on the iMac G5 and is compatible with many subsequent Macintosh computers. The first three generations of Apple TV used the Apple Remote as their primary control mechanism. It has now been replaced with the Siri Remote in the fourth generation.<br/>
+                </div>
+            </details>
+        </details>
+        <div class="response">
+            <div class="thought"><mark data-step="10"><em>Thought 2:</em> The Apple Remote was originally designed to control the Front Row media program. I need to search Front Row next and find what other devices it can control.</mark></div>
+            <div class="action"><em>Action 2:</em> <span class="tool">Search[Front Row]</span></div>
+        </div>
+        <div class="tool-response" data-step="11">
+            <div class="observation"><em>Observation 2:</em> Could not find [Front Row]. Similar: ['Front Row Motorsports', 'Front Row', 'Rugby league positions (redirect from The front row)', 'Front Row (software)', 'Murder in the Front Row'].</div>
+        </div>
+        <details class="prompt">
+            <summary>Prompt</summary>
+            <div>Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</div>
+            <div class="tool-definitions">
+                <details class="tool-definition">
+                    <summary>Search Tool</summary>
+                    <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Lookup Tool</summary>
+                    <div>(2) Lookup[keyword], which returns the next sentence containing keyword in the current passage.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Finish Tool</summary>
+                    <div>(3) Finish[answer], which returns the answer and finishes the task.</div>
+                </details>
+            </div>
+            <div>Here are some examples.</div>
+            <div class="examples">
+                <details class="example">
+                    <summary>Example 1</summary>
+                    <div>
+                        <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+                        <em>Thought 1:</em> I need to search Colorado orogeny, find the area that the eastern sector of the Colorado orogeny extends into, then find the elevation range of the area.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Colorado orogeny]</span><br/>
+                        <em>Observation 1:</em> The Colorado orogeny was an episode of mountain building (an orogeny) in Colorado and surrounding areas.<br/>
+                        <em>Thought 2:</em> It does not mention the eastern sector. So I need to look up eastern sector.<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[eastern sector]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) The eastern sector extends into the High Plains and is called the Central Plains orogeny.<br/>
+                        <em>Thought 3:</em> The eastern sector of Colorado orogeny extends into the High Plains. So I need to search High Plains and find its elevation range.<br/>
+                        <em>Action 3:</em> <span class="tool">Search[High Plains]</span><br/>
+                        <em>Observation 3:</em> High Plains refers to one of two distinct land regions<br/>
+                        <em>Thought 4:</em> I need to instead search High Plains (United States).<br/>
+                        <em>Action 4:</em> <span class="tool">Search[High Plains (United States)]</span><br/>
+                        <em>Observation 4:</em> The High Plains are a subregion of the Great Plains. From east to west, the High Plains rise in elevation from around 1,800 to 7,000 ft (550 to 2,130 m).[3]<br/>
+                        <em>Thought 5:</em>  High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.<br/>
+                        <em>Action 5:</em> <span class="tool">Finish[1,800 to 7,000 ft]</span>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 2</summary>
+                    <div>
+                        <em>Question:</em> Musician and satirist Allie Goertz wrote a song about the "The Simpsons"  character Milhouse, who Matt Groening named after who?<br/>
+                        <em>Thought 1:</em> The question simplifies to "The Simpsons" character Milhouse is named after who. I only need to search Milhouse and find who it is named after.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Milhouse]</span><br/>
+                        <em>Observation 1:</em> Milhouse Mussolini Van Houten is a recurring character in the Fox animated television series The Simpsons voiced by Pamela Hayden and created by Matt Groening.<br/>
+                        <em>Thought 2:</em> The paragraph does not tell who Milhouse is named after, maybe I can look up "named after".<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[named after]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous.<br/>
+                        <em>Thought 3:</em> Milhouse was named after U.S. president Richard Nixon, so the answer is Richard Nixon.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Richard Nixon]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 3</summary>
+                    <div>
+                        <em>Question:</em> Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?<br/>
+                        <em>Thought 1:</em> I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Adam Clayton Powell]</span><br/>
+                        <em>Observation 1:</em> Could not find [Adam Clayton Powell]. Similar: [’Adam Clayton Powell III’, ’Seventh Avenue (Manhattan)’, ’Adam Clayton Powell Jr. State Office Building’, ’Isabel Washington Powell’, ’Adam Powell’, ’Adam Clayton Powell (film)’, ’Giancarlo Esposito’].<br/>
+                        <em>Thought 2:</em> To find the documentary, I can search Adam Clayton Powell (film).<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Adam Clayton Powell (film)]</span><br/>
+                        <em>Observation 2:</em> Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg. The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.<br/>
+                        <em>Thought 3:</em> Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[The Saimaa Gesture]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 4</summary>
+                    <div>
+                        <em>Question:</em> What profession does Nicholas Ray and Elia Kazan have in common?<br/>
+                        <em>Thought 1:</em> I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Nicholas Ray]</span><br/>
+                        <em>Observation 1:</em> Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.<br/>
+                        <em>Thought 2:</em> Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Elia Kazan]</span><br/>
+                        <em>Observation 2:</em> Elia Kazan was an American film and theatre director, producer, screenwriter and actor.<br/>
+                        <em>Thought 3:</em> Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[director, screenwriter, actor]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 5</summary>
+                    <div>
+                        <em>Question:</em> Which magazine was started first Arthur’s Magazine or First for Women?<br/>
+                        <em>Thought 1:</em> I need to search Arthur’s Magazine and First for Women, and find which was started first.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Arthur’s Magazine]</span><br/>
+                        <em>Observation 1:</em> Arthur’s Magazine (1844-1846) was an American literary periodical published in Philadelphia in the 19th century.<br/>
+                        <em>Thought 2:</em> Arthur’s Magazine was started in 1844. I need to search First for Women next.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[First for Women]</span><br/>
+                        <em>Observation 2:</em> First for Women is a woman’s magazine published by Bauer Media Group in the USA.[1] The magazine was started in 1989.<br/>
+                        <em>Thought 3:</em> First for Women was started in 1989. 1844 (Arthur’s Magazine) < 1989 (First for Women), so Arthur’s Magazine was started first.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Arthur’s Magazine]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 6</summary>
+                    <div>
+                        <em>Question:</em> Were Pavel Urysohn and Leonid Levin known for the same type of work?<br/>
+                        <em>Thought 1:</em> I need to search Pavel Urysohn and Leonid Levin, find their types of work, then find if they are the same.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Pavel Urysohn]</span><br/>
+                        <em>Observation 1:</em> Pavel Samuilovich Urysohn (February 3, 1898 - August 17, 1924) was a Soviet mathematician who is best known for his contributions in dimension theory.<br/>
+                        <em>Thought 2:</em> Pavel Urysohn is a mathematician. I need to search Leonid Levin next and find its type of work.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Leonid Levin]</span><br/>
+                        <em>Observation 2:</em> Leonid Anatolievich Levin is a Soviet-American mathematician and computer scientist.<br/>
+                        <em>Thought 3:</em> Leonid Levin is a mathematician and computer scientist. So Pavel Urysohn and Leonid Levin have the same type of work.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[yes]</span><br/>
+                    </div>
+                </details>
+            </div>
+            <div>
+                <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+            </div>
+            <details class="scratchpad">
+                <summary>Scratchpad</summary>
+                <div>
+                    <em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.<br/>
+                    <em>Action 1:</em> <span class="tool">Search[Apple Remote]</span><br/>
+                    <em>Observation 1:</em> The Apple Remote is a remote control introduced in October 2005 by Apple Inc. for use with a number of its products with infrared capability. It was originally designed to control the Front Row media center program on the iMac G5 and is compatible with many subsequent Macintosh computers. The first three generations of Apple TV used the Apple Remote as their primary control mechanism. It has now been replaced with the Siri Remote in the fourth generation.<br/>
+                    <em>Thought 2:</em> The Apple Remote was originally designed to control the Front Row media program. I need to search Front Row next and find what other devices it can control.<br/>
+                    <em>Action 2:</em> <span class="tool">Search[Front Row]</span><br/>
+                    <em>Observation 2:</em> Could not find [Front Row]. Similar: ['Front Row Motorsports', 'Front Row', 'Rugby league positions (redirect from The front row)', 'Front Row (software)', 'Murder in the Front Row'].<br/>
+                </div>
+            </details>
+        </details>
+        <div class="response">
+            <div class="thought"><mark data-step="12"><em>Thought 3:</em> Front Row is not found. I need to search  Front Row (software) .</mark></div>
+            <div class="action"><em>Action 3:</em> <span class="tool">Search[Front Row (software)]</span></div>
+        </div>
+        <div class="tool-response" data-step="13">
+            <div class="observation"><em>Observation 3:</em> Front Row is a discontinued media center software application for Apple's Macintosh computers and Apple TV for navigating and viewing video, photos, podcasts and music from a computer, optical disc or the Internet through a 10-foot user interface (similar to Kodi and Windows Media Center). The software relies on iTunes and iPhoto and is controlled by an Apple Remote or the keyboard function keys. The first version was released in October 2005, with two major revisions since. Front Row was removed and discontinued in Mac OS X 10.7.[1]. Front Row was first unveiled on October 12, 2005 with the new iMac G5 (along with the built-in iSight camera, the Apple Remote, and Photo Booth).</div>
+        </div>
+        <details class="prompt">
+            <summary>Prompt</summary>
+            <div>Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</div>
+            <div class="tool-definitions">
+                <details class="tool-definition">
+                    <summary>Search Tool</summary>
+                    <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Lookup Tool</summary>
+                    <div>(2) Lookup[keyword], which returns the next sentence containing keyword in the current passage.</div>
+                </details>
+                <details class="tool-definition">
+                    <summary>Finish Tool</summary>
+                    <div>(3) Finish[answer], which returns the answer and finishes the task.</div>
+                </details>
+            </div>
+            <div>Here are some examples.</div>
+            <div class="examples">
+                <details class="example">
+                    <summary>Example 1</summary>
+                    <div>
+                        <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+                        <em>Thought 1:</em> I need to search Colorado orogeny, find the area that the eastern sector of the Colorado orogeny extends into, then find the elevation range of the area.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Colorado orogeny]</span><br/>
+                        <em>Observation 1:</em> The Colorado orogeny was an episode of mountain building (an orogeny) in Colorado and surrounding areas.<br/>
+                        <em>Thought 2:</em> It does not mention the eastern sector. So I need to look up eastern sector.<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[eastern sector]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) The eastern sector extends into the High Plains and is called the Central Plains orogeny.<br/>
+                        <em>Thought 3:</em> The eastern sector of Colorado orogeny extends into the High Plains. So I need to search High Plains and find its elevation range.<br/>
+                        <em>Action 3:</em> <span class="tool">Search[High Plains]</span><br/>
+                        <em>Observation 3:</em> High Plains refers to one of two distinct land regions<br/>
+                        <em>Thought 4:</em> I need to instead search High Plains (United States).<br/>
+                        <em>Action 4:</em> <span class="tool">Search[High Plains (United States)]</span><br/>
+                        <em>Observation 4:</em> The High Plains are a subregion of the Great Plains. From east to west, the High Plains rise in elevation from around 1,800 to 7,000 ft (550 to 2,130 m).[3]<br/>
+                        <em>Thought 5:</em>  High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.<br/>
+                        <em>Action 5:</em> <span class="tool">Finish[1,800 to 7,000 ft]</span>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 2</summary>
+                    <div>
+                        <em>Question:</em> Musician and satirist Allie Goertz wrote a song about the "The Simpsons"  character Milhouse, who Matt Groening named after who?<br/>
+                        <em>Thought 1:</em> The question simplifies to "The Simpsons" character Milhouse is named after who. I only need to search Milhouse and find who it is named after.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Milhouse]</span><br/>
+                        <em>Observation 1:</em> Milhouse Mussolini Van Houten is a recurring character in the Fox animated television series The Simpsons voiced by Pamela Hayden and created by Matt Groening.<br/>
+                        <em>Thought 2:</em> The paragraph does not tell who Milhouse is named after, maybe I can look up "named after".<br/>
+                        <em>Action 2:</em> <span class="tool">Lookup[named after]</span><br/>
+                        <em>Observation 2:</em> (Result 1 / 1) Milhouse was named after U.S. president Richard Nixon, whose middle name was Milhous.<br/>
+                        <em>Thought 3:</em> Milhouse was named after U.S. president Richard Nixon, so the answer is Richard Nixon.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Richard Nixon]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 3</summary>
+                    <div>
+                        <em>Question:</em> Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?<br/>
+                        <em>Thought 1:</em> I need to search Adam Clayton Powell and The Saimaa Gesture, and find which documentary is about Finnish rock groups.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Adam Clayton Powell]</span><br/>
+                        <em>Observation 1:</em> Could not find [Adam Clayton Powell]. Similar: [’Adam Clayton Powell III’, ’Seventh Avenue (Manhattan)’, ’Adam Clayton Powell Jr. State Office Building’, ’Isabel Washington Powell’, ’Adam Powell’, ’Adam Clayton Powell (film)’, ’Giancarlo Esposito’].<br/>
+                        <em>Thought 2:</em> To find the documentary, I can search Adam Clayton Powell (film).<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Adam Clayton Powell (film)]</span><br/>
+                        <em>Observation 2:</em> Adam Clayton Powell is a 1989 American documentary film directed by Richard Kilberg. The film is about the rise and fall of influential African-American politician Adam Clayton Powell Jr.[3][4] It was later aired as part of the PBS series The American Experience.<br/>
+                        <em>Thought 3:</em> Adam Clayton Powell (film) is a documentary about an African-American politician, not Finnish rock groups. So the documentary about Finnish rock groups must instead be The Saimaa Gesture.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[The Saimaa Gesture]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 4</summary>
+                    <div>
+                        <em>Question:</em> What profession does Nicholas Ray and Elia Kazan have in common?<br/>
+                        <em>Thought 1:</em> I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Nicholas Ray]</span><br/>
+                        <em>Observation 1:</em> Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.<br/>
+                        <em>Thought 2:</em> Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Elia Kazan]</span><br/>
+                        <em>Observation 2:</em> Elia Kazan was an American film and theatre director, producer, screenwriter and actor.<br/>
+                        <em>Thought 3:</em> Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[director, screenwriter, actor]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 5</summary>
+                    <div>
+                        <em>Question:</em> Which magazine was started first Arthur’s Magazine or First for Women?<br/>
+                        <em>Thought 1:</em> I need to search Arthur’s Magazine and First for Women, and find which was started first.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Arthur’s Magazine]</span><br/>
+                        <em>Observation 1:</em> Arthur’s Magazine (1844-1846) was an American literary periodical published in Philadelphia in the 19th century.<br/>
+                        <em>Thought 2:</em> Arthur’s Magazine was started in 1844. I need to search First for Women next.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[First for Women]</span><br/>
+                        <em>Observation 2:</em> First for Women is a woman’s magazine published by Bauer Media Group in the USA.[1] The magazine was started in 1989.<br/>
+                        <em>Thought 3:</em> First for Women was started in 1989. 1844 (Arthur’s Magazine) < 1989 (First for Women), so Arthur’s Magazine was started first.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[Arthur’s Magazine]</span><br/>
+                    </div>
+                </details>
+                <details class="example">
+                    <summary>Example 6</summary>
+                    <div>
+                        <em>Question:</em> Were Pavel Urysohn and Leonid Levin known for the same type of work?<br/>
+                        <em>Thought 1:</em> I need to search Pavel Urysohn and Leonid Levin, find their types of work, then find if they are the same.<br/>
+                        <em>Action 1:</em> <span class="tool">Search[Pavel Urysohn]</span><br/>
+                        <em>Observation 1:</em> Pavel Samuilovich Urysohn (February 3, 1898 - August 17, 1924) was a Soviet mathematician who is best known for his contributions in dimension theory.<br/>
+                        <em>Thought 2:</em> Pavel Urysohn is a mathematician. I need to search Leonid Levin next and find its type of work.<br/>
+                        <em>Action 2:</em> <span class="tool">Search[Leonid Levin]</span><br/>
+                        <em>Observation 2:</em> Leonid Anatolievich Levin is a Soviet-American mathematician and computer scientist.<br/>
+                        <em>Thought 3:</em> Leonid Levin is a mathematician and computer scientist. So Pavel Urysohn and Leonid Levin have the same type of work.<br/>
+                        <em>Action 3:</em> <span class="tool">Finish[yes]</span><br/>
+                    </div>
+                </details>
+            </div>
+            <div>
+                <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
+            </div>
+            <details class="scratchpad">
+                <summary>Scratchpad</summary>
+                <div>
+                    <em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.<br/>
+                    <em>Action 1:</em> <span class="tool">Search[Apple Remote]</span><br/>
+                    <em>Observation 1:</em> The Apple Remote is a remote control introduced in October 2005 by Apple Inc. for use with a number of its products with infrared capability. It was originally designed to control the Front Row media center program on the iMac G5 and is compatible with many subsequent Macintosh computers. The first three generations of Apple TV used the Apple Remote as their primary control mechanism. It has now been replaced with the Siri Remote in the fourth generation.<br/>
+                    <em>Thought 2:</em> The Apple Remote was originally designed to control the Front Row media program. I need to search Front Row next and find what other devices it can control.<br/>
+                    <em>Action 2:</em> <span class="tool">Search[Front Row]</span><br/>
+                    <em>Observation 2:</em> Could not find [Front Row]. Similar: ['Front Row Motorsports', 'Front Row', 'Rugby league positions (redirect from The front row)', 'Front Row (software)', 'Murder in the Front Row'].<br/>
+                    <em>Thought 3:</em> Front Row is not found. I need to search  Front Row (software) .<br/>
+                    <em>Action 3:</em> <span class="tool">Search[Front Row (software)]</span><br/>
+                    <em>Observation 3:</em> Front Row is a discontinued media center software application for Apple's Macintosh computers and Apple TV for navigating and viewing video, photos, podcasts and music from a computer, optical disc or the Internet through a 10-foot user interface (similar to Kodi and Windows Media Center). The software relies on iTunes and iPhoto and is controlled by an Apple Remote or the keyboard function keys. The first version was released in October 2005, with two major revisions since. Front Row was removed and discontinued in Mac OS X 10.7.[1]. Front Row was first unveiled on October 12, 2005 with the new iMac G5 (along with the built-in iSight camera, the Apple Remote, and Photo Booth).<br/>
+                </div>
+            </details>
+        </details>
+        <div class="response">
+            <div class="thought"><mark data-step="14"><em>Thought 4:</em> Front Row (software) is controlled by Apple Remote or the keyboard function keys. So the answer is keyboard function keys.</mark></div>
+            <div class="action"><em>Action 4:</em> <span class="tool" data-step="15">Finish[keyboard function keys]</span></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
