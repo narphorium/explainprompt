@@ -1,75 +1,462 @@
+:root {
+  --prompt-width: min(700px, calc(60vw - 96px));
+  --aside-offset: calc(var(--prompt-width) + 32px);
+  --default-font: "Inter", sans-serif;
+  --bg-color: #f0f0f0;
+  --default-text-color: #222;
+  --border-color: #ccc;
+  --selected-border-color: rgb(237, 211, 137);
+  --selected-bg-color: rgb(253 235 184);
+  --selected-text-color: #222;
+  --selected-tool-bg-color: rgb(0 0 0 / 8%);
+  --response-bg-color: white;
+  --tool-text-color: #007fff;
+  --tool-bg-color: rgb(0 127 255 / 10%);
+  --tool-selected-bg-color: rgb(82 162 244);
+  --tool-border-color: #b4d9ff;
+  --tool-response-bg-color: rgb(242 249 255);
+  --tool-response-text-color: #222;
+  --tool-reponse-selected-text-color: #222;
+  --tool-response-selected-bg-color: #c8e3fa;
+  --tool-response-selected-border-color: #a0c1e3;
+  --special-token-color: #777;
+  --prompt-font: "Roboto Mono", monospace;
+  --prompt-text-color: #666;
+  --prompt-border-color: #ccc;
+  --prompt-tool-bg-color: rgb(0 0 0 / 8%);
+  --button-bg-color: #e3e3e3;
+  --button-text-color: #6e7071;
+  --button-hover-bg-color: #a6a6ab;
+  --button-hover-text-color: white;
+  --button-pulse: #bdbdc4;
+  font-family: var(--default-font);
+  font-weight: 400;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #2f3237;
+    --default-text-color: #eee;
+    --border-color: #595b60;
+    --selected-text-color: #ffde98;
+    --selected-bg-color: rgb(73 69 61);
+    --selected-border-color: rgb(109 102 81);
+    --response-bg-color: #292b2f;
+    --tool-response-bg-color: #292b2f;
+    --tool-response-text-color: #82bdf2;
+    --tool-border-color: #4a5f79;
+    --prompt-text-color: #bbb;
+    --prompt-border-color: #595b60;
+    --prompt-tool-bg-color: rgb(255 255 255 / 8%);
+    --tool-text-color: #78bbff;
+    --tool-bg-color: rgb(84 169 255 / 20%);
+    --tool-reponse-selected-text-color: white;
+    --tool-response-selected-bg-color: #344760;
+    --tool-response-selected-border-color: #4a5f79;
+    --selected-tool-bg-color: rgb(255 175 42 / 15%);
+    --button-bg-color: rgba(255 255 255 / 7%);
+    --button-text-color: #bbbec9;
+    --button-hover-bg-color: rgba(255 255 255 / 30%);
+    --button-hover-text-color: white;
+    --button-pulse: rgba(255 255 255 / 30%);
+    font-weight: 300;
+  }
+}
+
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: var(--default-font);
+  }
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--default-text-color);
+  margin: 32px;
+}
+
+.aside {
+  width: 40%;
+  max-width: 500px;
+  position: fixed;
+  top: 0;
+  left: var(--aside-offset);
+  margin: 32px 0 32px 32px;
+}
+
+.aside h1 {
+  margin: 0 0 16px 0;
+}
+
+.aside .citation {
+  font-size: 10pt;
+  color: var(--prompt-text-color);
+  margin-bottom: 16px;
+}
+
+.citation a {
+  color: var(--prompt-text-color);
+}
+
+.aside .codicon {
+  font-size: 12px;
+}
+
+.aside .description {
+  display: none;
+  background-color: var(--selected-bg-color);
+  padding: 1em;
+  border-radius: 4px;
+  border: 1px solid var(--selected-border-color);
+  /* box-shadow: 0 4px 8px rgb(0 0 0 / 4%); */
+  margin-top: 24px;
+  font-size: 11pt;
+}
+
+.aside .description.selected {
+  display: block;
+  animation: none;
+}
+
+.aside .description.tool {
+  background-color: var(--tool-response-selected-bg-color);
+  border-color: var(--tool-response-selected-border-color);
+  color: var(--tool-response-selected-text-color);
+}
+
+.description p {
+  margin: 0 0 1em 0;
+}
+
+.description p:last-child {
+  margin: 0;
+}
+
+.description a {
+  color: var(--selected-text-color);
+}
+
+.trajectory {
+  width: var(--prompt-width);
+  margin-bottom: 500px;
+}
+
+h1 {
+  font-weight: 500;
+  font-size: 24pt;
+  margin-bottom: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  h1 {
+    font-weight: 400;
+  }
+}
+
+.examples,
+.tool-definitions,
+.response,
+.prompt,
+.scratchpad,
+.reflections,
+.tool-response {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+.example,
+.tool-definition {
+  padding: 4px;
+  border-bottom: 1px solid var(--prompt-border-color);
+}
+
+.tool-definition:last-child,
+.example:last-child {
+  border-width: 0;
+}
+
+.response,
+.prompt,
+.scratchpad,
+.reflections,
+.tool-response {
+  padding: 4px;
+  margin: 4px 0;
+}
+
+.tool-definitions,
+.examples,
+.scratchpad,
+.reflections {
+  margin: 8px 10px 0 10px;
+  border-color: var(--prompt-border-color);
+}
+
+details > div {
+  margin: 8px 1em;
+}
+
+summary {
+  margin: 2px 0;
+  font-family: var(--default-font);
+  font-size: 11pt;
+  user-select: none;
+  position: relative;
+  padding-left: 20px;
+}
+
+summary:focus {
+  outline: 0;
+}
+
+summary::marker {
+  content: none;
+}
+
+summary::before {
+  content: "\e5cc";
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  position: absolute;
+  top: -1px;
+  left: 0;
+  transform: rotate(0);
+  animation: transform 0.4s ease;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.response {
+  background-color: var(--response-bg-color);
+  border-color: var(--border-color);
+}
+
+.prompt {
+  background-color: transparent;
+  border-color: var(--prompt-border-color);
+  color: var(--prompt-text-color);
+  font-family: var(--prompt-font);
+  font-size: 10pt;
+}
+
+.prompt .selected {
+  color: var(--selected-text-color);
+}
+
+.question,
+.answer,
+.thought,
+.action,
+.observation,
+.reflection {
+  line-height: 1.3em;
+  font-size: 11pt;
+  margin: 0.5em 1em;
+}
+
+em {
+  font-weight: 600;
+  font-style: normal;
+}
+
+.trajectory .tool {
+  color: var(--tool-text-color);
+  background-color: var(--tool-bg-color);
+}
+
+.trajectory .tool,
+.aside .description .tool {
+  padding: 2px 6px 2px 22px;
+  border-radius: 4px;
+  position: relative;
+  font-family: var(--prompt-font);
+  font-size: 10pt;
+  display: inline-block;
+}
+
+.prompt .tool {
+  color: var(--prompt-text-color);
+  background-color: var(--prompt-tool-bg-color);
+}
+
+.trajectory .selected .tool,
+.aside .description .tool {
+  color: var(--selected-text-color);
+  background-color: var(--selected-tool-bg-color);
+}
+
+.special-token {
+  color: var(--special-token-color);
+  background-color: rgb(0 0 0 / 6%);
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: 0 4px;
+  font-family: var(--prompt-font);
+}
+
+.tool-response {
+  border-color: var(--tool-border-color);
+  background-color: var(--tool-response-bg-color);
+  color: var(--tool-response-text-color);
+}
+
+.trajectory .tool::before,
+.aside .description .tool::before {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  content: "\eb6d";
+  font: normal normal normal 12px/1 codicon;
+  text-decoration: none;
+  text-rendering: auto;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tool-response.selected {
+  background-color: var(--tool-response-selected-bg-color);
+  border-color: var(--tool-response-selected-border-color);
+  color: var(--tool-reponse-selected-text-color);
+  animation: fadeInTool 1s;
+}
+
+.trajectory .tool.selected {
+  background-color: var(--tool-selected-bg-color);
+  color: white;
+  animation: fadeInSelectedTool 1s;
+}
+
 #controls {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 #position {
-    vertical-align: top;
-    line-height: 26px;
-    margin: 0 1em;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 11pt;
+  vertical-align: top;
+  line-height: 26px;
+  margin: 0 1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
 }
 
 #controls button {
-    border: 0;
-    background-color: #e3e3e3;
-    border-radius: 24px;
-    color: #6e7071;
-    margin: 0 2px;
-  }
-  
-  #controls button:hover {
-    background-color: #a6a6ab;
-    color: white;
-  }
-  
-  #controls button:focus {
-    outline: 0;
-  }
-
-  .visible {
-    display: block !important;
-  }
-  
-  mark {
-    background-color: transparent;
-  }
-  
-*[data-step]:hover {
-    cursor: pointer;
-  }
-  
-.selected {
-    background-color: rgb(253 235 184);
-    animation: fadeIn 1.0s;
+  border: 0;
+  background-color: var(--button-bg-color);
+  border-radius: 24px;
+  color: var(--button-text-color);
+  margin: 0 2px;
 }
 
-.response.selected {
-    border-color: rgb(237 211 137);
+#controls button:hover {
+  background-color: var(--button-hover-bg-color);
+  color: var(--button-hover-text-color);
 }
-  
-@keyframes fadeIn {
-    0% { background-color: transparent; }
-    100% { background-color: rgb(253 235 184); }
+
+#controls button:focus {
+  outline: 0;
 }
 
 button.pulse1 {
-    animation: pulse1 0.3s;
+  animation: pulse1 0.2s;
 }
 
 button.pulse2 {
-    animation: pulse2 0.3s;
+  animation: pulse2 0.2s;
 }
 
 @keyframes pulse1 {
-    0% { background-color: #e3e3e3; }
-    50% { background-color: #a6a6ab; }
-    100% { background-color: #e3e3e3; }
+  0% {
+    background-color: var(--button-bg-color);
+  }
+  50% {
+    background-color: var(--button-pulse);
+  }
+  100% {
+    background-color: var(--button-bg-color);
+  }
 }
 
 @keyframes pulse2 {
-    0% { background-color: #e3e3e3; }
-    50% { background-color: #a6a6ab; }
-    100% { background-color: #e3e3e3; }
+  0% {
+    background-color: var(--button-bg-color);
+  }
+  50% {
+    background-color: var(--button-pulse);
+  }
+  100% {
+    background-color: var(--button-bg-color);
+  }
+}
+
+.visible {
+  display: block !important;
+}
+
+mark {
+  background-color: transparent;
+  color: var(--default-text-color);
+}
+
+.prompt mark {
+  color: var(--prompt-text-color);
+}
+
+.trajectory *[data-step]:hover {
+  cursor: pointer;
+}
+
+.trajectory *[data-step].selected:hover {
+  cursor: default;
+}
+
+.selected {
+  color: var(--selected-text-color);
+  background-color: var(--selected-bg-color);
+  animation: fadeIn 1s;
+}
+
+.response.selected {
+  color: var(--selected-text-color);
+  border-color: var(--selected-border-color);
+}
+
+@keyframes fadeIn {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: var(--selected-bg-color);
+  }
+}
+
+@keyframes fadeInTool {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: var(--tool-response-selected-bg-color);
+  }
+}
+
+@keyframes fadeInSelectedTool {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: var(--tool-selected-bg-color);
+  }
 }
