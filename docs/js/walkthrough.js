@@ -130,13 +130,13 @@ function closeDetail(detail) {
       this.current_step = step;
       this.position.innerText = (this.current_step + 1) + ' of ' + this.num_steps;
 
-        // Close all details that were open in the previous step
-        // I commented this out because it was causing the page to jump around and make it harder to follow the walkthrough
-    //   document.querySelectorAll('details').forEach((detail) => {
-    //     if (detail.dataset.step != this.current_step && detail.hasAttribute('prev-open')) {
-    //         closeDetail(detail);
-    //     }
-    //   })
+      // Close all details that were open in the previous step
+      // I commented this out because it was causing the page to jump around and make it harder to follow the walkthrough
+      // document.querySelectorAll('details').forEach((detail) => {
+      //   if (detail.dataset.step != this.current_step && detail.hasAttribute('prev-open')) {
+      //       closeDetail(detail);
+      //   }
+      // })
 
       var scroll_target = Number.MAX_SAFE_INTEGER;
       document.querySelectorAll('.trajectory *[data-step]').forEach((mark) => {
