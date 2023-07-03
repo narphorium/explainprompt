@@ -1,5 +1,6 @@
-function buildButton(iconName, onclick) {
+function buildButton(iconName, title, onclick) {
     var button = document.createElement('button');
+    button.setAttribute('title', title);
     var icon = document.createElement('span');
     icon.classList.add('material-icons');
     icon.classList.add('material-icons-outlined');
@@ -22,16 +23,16 @@ function buildButton(iconName, onclick) {
   function Walkthrough(controls) {
     this.current_step = -1;
   
-    this.first_button = buildButton('first_page', () => {
+    this.first_button = buildButton('first_page', 'Return to start [home]', () => {
         this.goto(0);
     });
-    this.last_button = buildButton('last_page', () => {
+    this.last_button = buildButton('last_page', 'Jump to end [end]', () => {
         this.goto(this.num_steps-1);
     });
-    this.prev_button = buildButton('chevron_left', () => {
+    this.prev_button = buildButton('chevron_left', 'Previous step [←]', () => {
         this.goto(this.current_step - 1);
     });
-    this.next_button = buildButton('chevron_right', () => {
+    this.next_button = buildButton('chevron_right', 'Next step [→]', () => {
         this.goto(this.current_step + 1);
       })
     controls.appendChild(this.first_button);
@@ -83,7 +84,7 @@ function buildButton(iconName, onclick) {
     });
   
     window.addEventListener('load',  () => {
-        const step_data = document.querySelectorAll('.prompt-sequence *[data-step]');
+        const step_data = document.querySelectorAll('.trajectory *[data-step]');
         step_data.forEach((mark) => {
             mark.addEventListener('click', (e) => {
                 if (mark.dataset.step != this.current_step) {
@@ -129,21 +130,23 @@ function closeDetail(detail) {
       this.current_step = step;
       this.position.innerText = (this.current_step + 1) + ' of ' + this.num_steps;
 
-      document.querySelectorAll('details').forEach((detail) => {
-        if (detail.dataset.step != this.current_step && detail.hasAttribute('prev-open')) {
-            closeDetail(detail);
-        }
-      })
+        // Close all details that were open in the previous step
+        // I commented this out because it was causing the page to jump around and make it harder to follow the walkthrough
+    //   document.querySelectorAll('details').forEach((detail) => {
+    //     if (detail.dataset.step != this.current_step && detail.hasAttribute('prev-open')) {
+    //         closeDetail(detail);
+    //     }
+    //   })
 
       var scroll_target = Number.MAX_SAFE_INTEGER;
-      document.querySelectorAll('.prompt-sequence *[data-step]').forEach((mark) => {
+      document.querySelectorAll('.trajectory *[data-step]').forEach((mark) => {
         if (mark.dataset.step == this.current_step) {
           mark.classList.add('selected');
           if (mark.tagName == 'DETAILS') {
             openDetail(mark);
           }
           openParentDetails(mark);
-          scroll_target = Math.min(scroll_target, mark.offsetTop - 200);
+          scroll_target = Math.min(scroll_target, mark.offsetTop - 260);
         } else {
             mark.classList.remove('selected');
         }
