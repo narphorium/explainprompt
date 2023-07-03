@@ -1,9 +1,16 @@
 <html>
 <head>
     <title>Large Language Models Are Zero-Shot Reasoners</title>
+
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../../css/prompt.css">
+
     <link rel="stylesheet" href="../../../css/walkthrough.css">
     
     <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
@@ -17,18 +24,22 @@
         <a target="_blank" href="http://arxiv.org/abs/2205.11916">arXiv:2205.11916</a> (<span class="year">2022</span>)
     </div>
     <div id="controls"></div>
-    <div id="description" class="description">This is the description</div>
+    <div class="description" data-step="0">This is a sample question from the <a targe="_blank" href="https://gitlab.cs.washington.edu/ALGES/TACL2015">SingleEQ dataset</a> which is used to evaluate Chain of Thought prompting on algebraic word problems.</div>
+    <div class="description" data-step="1"></div>
 </div>
-<div class="prompt-sequence">
+<script>
+    new Walkthrough(document.getElementById('controls'));
+</script>
+<div class="trajectory">
     <div class="conversation">
-        <div class="response">
+        <div class="response" data-step="0">
             <div class="question"><em>Q:</em> A spaceship traveled 0.5 of a light-year from Earth to Planet X and 0.1 of a light-year from Planet X to Planet Y. Then it traveled 0.1 of a light-year from Planet Y back to Earth. How many light-years did the spaceship travel in all?</div>
         </div>
-        <details class="prompt" open>
+        <details class="prompt">
             <summary>Prompt</summary>
             <div>
                 <em>Q:</em> A spaceship traveled 0.5 of a light-year from Earth to Planet X and 0.1 of a light-year from Planet X to Planet Y. Then it traveled 0.1 of a light-year from Planet Y back to Earth. How many light-years did the spaceship travel in all?<br/>
-                <em>A:</em> Let’s think step by step.
+                <em>A:</em> <mark data-step="1">Let’s think step by step.</mark>
             </div>
         </details>
         <div class="response">
