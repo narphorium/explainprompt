@@ -1,0 +1,137 @@
+<html>
+<head>
+    <title>Learning to Reason and Memorize with Self-Notes</title>
+
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../css/walkthrough.css">
+    
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script src="../../../js/walkthrough.js"></script>
+</head>
+<body>
+<div class="aside">
+    <h1>Learning to Reason and Memorize with Self-Notes</h1>
+    <div class="citation">
+        <div class="authors"></div>
+        <a target="_blank" href="http://arxiv.org/abs/">arXiv:</a> (<span class="year">2023</span>)
+    </div>
+    <div id="controls"></div>
+    <div class="description" data-step="0"></div>
+    <div class="description" data-step="1"></div>
+</div>
+<script>
+    new Walkthrough(document.getElementById('controls'));
+</script>
+<div class="trajectory">
+    <div class="conversation">
+        <div class="response">
+            <div class="question">
+                Mary is with Daniel.<br/>
+                Frank is with Sandra.<br/>
+                John has the book.<br/>
+                Frank has the suitcase.<br/>
+                Daniel is at the station.<br/>
+                the banana is inside the basket.<br/>
+                Bob has the apple.<br/>
+                Bob has the bag.<br/>
+                the ball is inside the box.<br/>
+                the apple is inside the bag.<br/>
+                Alice has the banana.<br/>
+                Alice has the key.<br/>
+                John is at the farm.<br/>
+                Charlie is at the bridge.<br/>
+                the book is inside the box.<br/>
+                Alice is at the store.<br/>
+                Bob is with Alice.<br/>
+            </div>
+        </div>
+        <div class="response">
+            <div class="question"><em>Q:</em> Where is the ball?</div>
+        </div>
+        <details class="prompt">
+            <summary>Prompt</summary>
+            <div>
+                Mary is with Daniel.<br/>
+                Frank is with Sandra.<br/>
+                John has the book.<br/>
+                Frank has the suitcase.<br/>
+                Daniel is at the station.<br/>
+                the banana is inside the basket.<br/>
+                Bob has the apple.<br/>
+                Bob has the bag.<br/>
+                the ball is inside the box.<br/>
+                the apple is inside the bag.<br/>
+                Alice has the banana.<br/>
+                Alice has the key.<br/>
+                John is at the farm.<br/>
+                Charlie is at the bridge.<br/>
+                the book is inside the box.<br/>
+                Alice is at the store.<br/>
+                Bob is with Alice.<br/>
+                <em>Q:</em> Where is the ball?<br/>
+            </div>
+        </details>
+        <div class="response">
+            <div class="thought">
+                Mary is with Daniel.<br/>
+                Frank is with Sandra.<br/>
+                John has the book.<br/>
+                Frank has the suitcase.<br/>
+                Daniel is at the station.<br/>
+                <em>SQ:</em> Where is Mary?<br/>
+                Mary is at the station.<br/>
+                the banana is inside the basket.<br/>
+                Bob has the apple.<br/>
+                Bob has the bag.<br/>
+                the ball is inside the box.<br/>
+                the apple is inside the bag.<br/>
+                Alice has the banana.<br/>
+                <em>SQ:</em> Who has the basket?<br/>
+                Alice has the basket.<br/>
+                Alice has the key.<br/>
+                John is at the farm.<br/>
+                <em>SQ:</em> Where is the book?<br/>
+                the book is at the farm.<br/>
+                Charlie is at the bridge.<br/>
+                the book is inside the box.<br/>
+                <em>SQ:</em> Who has the box?<br/>
+                John has the box.<br/>
+                <em>SQ:</em> Where is the box?<br/>
+                the box is at the farm.<br/>
+                <em>SQ:</em> Who has the ball?<br/>
+                John has the ball.<br/> 
+                <em>SQ:</em> Where is the ball?<br/>
+                the ball is at the farm.<br/>
+                Alice is at the store.<br/>
+                <em>SQ:</em> Where is the banana?<br/>
+                the banana is at the store.<br/>
+                <em>SQ:</em> Where is the basket?<br/>
+                the basket is at the store.<br/> 
+                <em>SQ:</em> Where is thekey?<br/>
+                the key is at the store.<br/>
+                Bob is with Alice.<br/>
+                <em>SQ:</em> Where is Bob?<br/>
+                Bob is at the store.<br/>
+                <em>SQ:</em> Where is the apple?<br/>
+                the apple is at the store.<br/>
+                <em>SQ:</em> Where is the bag?<br/>
+                the bag is at the store.<br/>
+                <em>SQ:</em> Where is the key?<br/>
+                the key is at the store.<br/>
+            </div>
+            <div class="answer"><em>A:</em> the ball is at the farm.</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
