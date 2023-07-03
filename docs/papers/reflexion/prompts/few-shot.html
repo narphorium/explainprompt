@@ -25,9 +25,44 @@
         <a target="_blank" href="https://github.com/noahshinn024/reflexion"><i class="codicon codicon-github-inverted"></i></a>
     </div>
     <div id="controls"></div>
-    <div  class="description" data-step="0">Step 1</div>
-    <div  class="description" data-step="1">Step 2</div>
-    <div  class="description" data-step="2">Step 3</div>
+    <div class="description" data-step="0">This is the sample question from the <a target="_blank" href="https://hotpotqa.github.io">HotpotQA dataset</a> which was used to evaluate Reflexion prompting on question answering tasks.</div>
+    <div class="description" data-step="1">The Actor prompt follows the same format as <a href="../../react/prompts/few-shot.html">ReAct</a> prompting.</div>
+    <div class="description" data-step="2">Tool definition</div>
+    <div class="description" data-step="3">This part of the prompt is slightly different from the standard ReAct prompt. It is only in the GitHub repo and not covered in the paper.</div>
+    <div class="description" data-step="4">The Reflexion few-shot examples are slightly longer than the ReAct examples because they include a self-reflection step.</div>
+    <div class="description" data-step="5">The input question is placed at the end of the prompt to begin the next cycle of Thought, Action, Observation steps.</div>
+    <div class="description" data-step="6">Here we see that the model has read the question and decided to call <span class="tool">Search[Grown-Ups]</span> to find out who starred in the TV show.</div>
+    <div class="description tool" data-step="7">The <span class="tool">Search[]</span> tool takes a single text argument and searches Wikipedia for that term. The tool returns the first 5 sentences of text from the first matching result.</div>
+    <div class="description tool" data-step="8">Here we can see the first 5 sentences of the Wikipedia page for <a target="_blank" href="https://en.wikipedia.org/wiki/Grown-Ups">Grown-Ups</a>.</div>
+    <div class="description" data-step="9">just like in <a href="../../react/prompts/few-shot.html">ReAct</a> prompting, the outputs from the previous cycle get added to the end of the prompt as a form of short-term memory. This is what enables the model to reflect on the outputs of the previous action and use that information when it decides on the next action to take.</div>
+    <div class="description" data-step="10">
+        <p>Recall in <em>Thought 1</em>, the model decided that it needed to call both <span class="tool">Search[Grown-Ups]</span> and <span class="tool">Search["’Allo ’Allo!"]</span> to find which actor they have in common. However, since the ReAct prompting follows a strict Through, Action, Observation cycle, it can only run one tool per cycle.</p>
+        <p>Now we see the follow-up cycle where the model has remembered the previous thought and is continuing it's original plan by calling <span class="tool">Search["’Allo ’Allo!"]</span>.</p>
+    </div>
+    <div class="description tool" data-step="11">
+        <p>The page cannot be found because the call to the tool wasn't formatted correctly. The quotation marks around "’Allo ’Allo!" should not have been included in the <span class="tool">Search</span> call.</p>
+        <p>This is a good example of how brittle the Action syntax can be and the model can easily get confused by things like quotation marks in the original question.</p>
+    </div>
+    <div class="description" data-step="12">To recover from the previous error, the model chooses to <span class="tool">Search[Gorden Kaye]</span> from the list of similar pages in <em>Observation 2</em></div>
+    <div class="description tool" data-step="13">Here we can see the first 5 sentences of the Wikipedia page for <a target="_blank" href="https://en.wikipedia.org/wiki/Gorden_Kaye">Gorden Kaye</a>.</div>
+    <div class="description tool" data-step="14">The model decides that it has found the answer to the original input question and end the prompting cycle by calling <span class="tool">Finish[Rene Artois]</span>.</div>
+    <div class="description tool" data-step="15">However, unlike in the <a href="../../react/prompts/few-shot.html">ReAct</a> example, the prompting doesn't end here. The <span class="tool">Finish</span> tool is able to look up the correct answer from the evaluation dataset and add the result to the prompt cycle; letting the model know that it's answer is "INCORRECT".</div>
+    <div class="description" data-step="16">The Self-Reflection prompt is the major difference between Reflexion and <a href="../../react/prompts/few-shot.html">ReAct</a>. This is where the model is asked to look at the full trajectory of prompts so far and diagnose the possible reason for why the previous answer was unsuccessful.</div>
+    <div class="description" data-step="17">The few-shot examples are the same as in the Actor prompt. They both contain examples of self-reflection.</div>
+    <div class="description" data-step="18">The previous trial is annotated as such and the "Reflection:" prompt is added to make sure that the model writes a reflection and doesn't get confused and try to jump right back into the Though, Action, Observation cycle.</div>
+    <div class="description" data-step="19">The self-reflection accurately catches the bad tool call in the previous set of prompts but still doesn't know that Gorden Kaye only appeared on "’Allo ’Allo!" and not on Grown-Ups.</div>
+    <div class="description" data-step="20">
+        <p>The reflection is now added to a new section of the Actor prompt. If there are many attempts to solve the question, the full list of self-reflections will appear in order here; giving the model a high-level summary of why it's attempts have failed.</p>
+        <p>Note that the "short-term memory" scratchpad has been reset so the model no can no longer see the specific steps it took in the previous trials. It can only see the reflections.</p>
+    </div>
+    <div class="description" data-step="21">We can immediately see the effects of the actor prompt reseting it's scratchpad because it starts the 2nd trial by taking the exact same <span class="tool">Search[Grown-Ups]</span> action that it took at the start of the first trial. If the scratchpad hadn't been reset, the model could have re-used the previous tool response and just picked up where it left off.</div>
+    <div class="description" data-step="22">
+        <p>This time the model correctly realizes that the Grown-Ups page doesn't say which actor was best-known for a role on "’Allo ’Allo!" and so it changes its approach and starts looking up the actors in Grown-Up to see if any of them starred in "’Allo ’Allo!". </p>
+        <p>Even though it started with the same action as the first trial, the model was able to change it's trajectory on the 2nd trial because the reflection has been added to the Actor prompt.</p>
+    </div>
+    <div class="description tool" data-step="23">The Wikipedia page for <a target="_blank" href="https://en.wikipedia.org/wiki/Sam_Kelly">Sam Kelly</a> shows that one of the roles that he is best-known for was on "’Allo ’Allo!".</div>
+    <div class="description tool" data-step="24">The model concludes it's second trial by calling <span class="tool">Finish[Captain Hans Geering]</span>.</div>
+    <div class="description tool" data-step="25">The answer is validated and found to be correct!</div>
 </div>
 <script>
     new Walkthrough(document.getElementById('controls'));
@@ -40,11 +75,11 @@
         </div>
         <details class="prompt">
             <summary>Actor Prompt</summary>
-            <div>
+            <div data-step="1">
             Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:<br/>
             </div>
             <div class="tool-definitions">
-            <details class="tool-definition" data-step="1">
+            <details class="tool-definition" data-step="2">
                 <summary>Search Tool</summary>
                 <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
             </details>
@@ -57,7 +92,7 @@
                 <div>(3) Finish[answer], which returns the answer and finishes the task.</div>
             </details>
             </div>
-            <div>
+            <div data-step="3">
             You may take as many steps as necessary.<br/>
             Here are some examples:</div>
             <div class="examples">
@@ -77,7 +112,7 @@
                 <em>Thought 3:</em> Benito Mussolini was assassinated as part of the collapse of the Axis powers during World War II. So the Rome Protocols were signed by three Prime Ministers one of which was assassinated as part of World War II.<br/>
                 <em>Action 3:</em> <span class="tool">Finish[World War II]</span><br/>
                 <br/>
-                <em>Reflection:</em> I searched one of the prime ministers involved in the signing, then attemted to answer right away. I should have searched each of the prime ministers, then looked up 'death' on each of their pages in order to get more information before answering.
+                <mark data-step="4"><em>Reflection:</em> I searched one of the prime ministers involved in the signing, then attemted to answer right away. I should have searched each of the prime ministers, then looked up 'death' on each of their pages in order to get more information before answering.</mark>
             </div>
             </details>
             <details class="example">
@@ -108,17 +143,18 @@
                 </div>
             </details>
             </div>
+            
+            <div data-step="3">(END OF EXAMPLES)</div>
             <div>
-            (END OF EXAMPLES)<br/>
             <br/>
-            <em>Question:</em> Grown-Ups starred the actor who was best known for which role on "’Allo ’Allo!"?
+            <mark data-step="5"><em>Question:</em> Grown-Ups starred the actor who was best known for which role on "’Allo ’Allo!"?</mark>
             </div>
         </details>
         <div class="response">
-            <div class="thought"><em>Thought 1:</em> <mark data-step="2">I need to search Grown-Ups and "’Allo ’Allo!", find the actor who starred in Grown-Ups, then find the role he was best known for in "’Allo ’Allo!".</mark></div>
-            <div class="action"><em>Action 1:</em> <span class="tool">Search[Grown-Ups]</span></div>
+            <div class="thought"><mark data-step="6"><em>Thought 1:</em> I need to search Grown-Ups and "’Allo ’Allo!", find the actor who starred in Grown-Ups, then find the role he was best known for in "’Allo ’Allo!".</mark></div>
+            <div class="action"><em>Action 1:</em> <span class="tool" data-step="7">Search[Grown-Ups]</span></div>
         </div>
-        <div class="tool-response">
+        <div class="tool-response" data-step="8">
             <div class="observation"><em>Observation 1:</em> Grown-Ups is a 1980 British BBC television film devised and directed by Mike Leigh. It stars Lesley Manville, Philip Davis, Brenda Blethyn, Janine Duvitski, Lindsay Duncan and Sam Kelly. It was edited by Robin Sales and produced by Louis Marks for the BBC, and originally shown on BBC 2 on 28 November 1980.</div>
         </div>
         <details class="prompt">
@@ -196,7 +232,7 @@
             (END OF EXAMPLES)<br/>
             <br/>
             <em>Question:</em> Grown-Ups starred the actor who was best known for which role on "’Allo ’Allo!"?</div>
-            <details class="scratchpad">
+            <details class="scratchpad" data-step="9">
                 <summary>Scratchpad</summary>
                 <div>
                 <em>Thought 1:</em> I need to search Grown-Ups and "’Allo ’Allo!", find the actor who starred in Grown-Ups, then find the role he was best known for in "’Allo ’Allo!".<br/>
@@ -206,10 +242,10 @@
             </details>
         </details>
         <div class="response">
-            <div class="thought"><em>Thought 2:</em> Grown-Ups starred Lesley Manville, Philip Davis, Brenda Blethyn, Janine Duvitski, Lindsay Duncan and Sam Kelly. I need to search "’Allo ’Allo!" and find which actor was best known for which role.</div>
+            <div class="thought"><mark data-step="10"><em>Thought 2:</em> Grown-Ups starred Lesley Manville, Philip Davis, Brenda Blethyn, Janine Duvitski, Lindsay Duncan and Sam Kelly. I need to search "’Allo ’Allo!" and find which actor was best known for which role.</mark></div>
             <div class="action"><em>Action 2:</em> <span class="tool">Search["’Allo ’Allo!"]</span></div>
         </div>
-        <div class="tool-response">
+        <div class="tool-response" data-step="11">
             <div class="observation"><em>Observation 2:</em> Could not find ["’Allo ’Allo!"]. Similar: ["’Allo ’Allo!", "List of ’Allo ’Allo! characters", ’Gorden Kaye’, "’Allo ’Allo! (series 2)", ’Allô, allô’, ’Francesca Gonshaw’, "’Allo ’Allo! (series 4)", ’Kim Hartman’, "’Allo ’Allo! (series 6)", ’Jeremy Lloyd’]</div>
         </div>
         <details class="prompt">
@@ -300,10 +336,10 @@
             </details>
         </details>
         <div class="response">
-            <div class="thought"><em>Thought 3:</em> To find the actor who was best known for which role on "’Allo ’Allo!", I can search Gorden Kaye.</div>
+            <div class="thought"><mark data-step="12"><em>Thought 3:</em> To find the actor who was best known for which role on "’Allo ’Allo!", I can search Gorden Kaye.</mark></div>
             <div class="action"><em>Action 3:</em> <span class="tool">Search[Gorden Kaye]</span></div>
         </div>
-        <div class="tool-response">
+        <div class="tool-response" data-step="13">
             <div class="observation"><em>Observation 3:</em> Gordon Irving Kaye (7 April 1941 – 23 January 2017), known professionally as Gorden Kaye, was an English actor, best known for playing womanising café owner René Artois in the television comedy series ’Allo ’Allo!.</div>
         </div>
         <details class="prompt">
@@ -398,16 +434,16 @@
         </details>
         <div class="response">
             <div class="thought"><em>Thought 4:</em> Gorden Kaye was best known for playing womanising café owner René Artois in the television comedy series "’Allo ’Allo!". So the answer is Rene Artois.</div>
-            <div class="action"><em>Action 4:</em> <span class="tool">Finish[Rene Artois]</span></div>
+            <div class="action"><em>Action 4:</em> <span class="tool" data-step="14">Finish[Rene Artois]</span></div>
         </div>
-        <div class="tool-response">
+        <div class="tool-response" data-step="15">
             <div class="observation"><em>Observation 4:</em> Answer is INCORRECT</div>
         </div>
         <details class="prompt">
             <summary>Self-Reflection Prompt</summary>
                 <div>
-                You are an advanced reasoning agent that can improve based on self refection. You will be given a previous reasoning trial in which you were given access to an Docstore API environment and a question to answer. You were unsuccessful in answering the question either because you guessed the wrong answer with Finish[<answer>], or you used up your set number of reasoning steps. In a few sentences, Diagnose a possible reason for failure and devise a new, concise, high level plan that aims to mitigate the same failure. Use complete sentences.<br/>
-                Here are some examples:</div>
+                <mark data-step="16">You are an advanced reasoning agent that can improve based on self refection. You will be given a previous reasoning trial in which you were given access to an Docstore API environment and a question to answer. You were unsuccessful in answering the question either because you guessed the wrong answer with Finish[&lt;answer&gt;], or you used up your set number of reasoning steps. In a few sentences, Diagnose a possible reason for failure and devise a new, concise, high level plan that aims to mitigate the same failure. Use complete sentences.</mark><br/>
+                <mark data-step="17">Here are some examples:</mark></div>
                 <div class="examples">
                 <details class="example">
                     <summary>Example 1</summary>
@@ -457,7 +493,7 @@
                 </details>
                 </div>
                 <div>
-                <em>Previous Trial:</em><br/>
+                <mark data-step="18"><em>Previous Trial:</em></mark><br/>
                 <em>Question:</em> Grown-Ups starred the actor who was best known for which role on "’Allo ’Allo!"?
                 </div>
                 <details class="scratchpad">
@@ -477,9 +513,9 @@
                         <em>Observation 4:</em> Answer is INCORRECT
                     </div>
                 </details>
-                <div><em>Reflection:</em></div>
+                <div><mark data-step="18"><em>Reflection:</em></mark></div>
         </details>
-        <div class="response">
+        <div class="response" data-step="19">
             <div class="reflection"><em>Reflection:</em> I searched the wrong title for the show, "’Allo ’Allo!", which resulted in no results. I should have searched the show’s main character, Gorden Kaye, to find the role he was best known for in the show.</div>
         </div>
         <details class="prompt">
@@ -555,7 +591,7 @@
             <div>
             (END OF EXAMPLES)
             </div>
-            <details class="reflections">
+            <details class="reflections" data-step="20">
                 <summary>Reflections</summary>
                 <div>
                 <em>Reflection:</em> I searched the wrong title for the show, "’Allo ’Allo!", which resulted in no results. I should have searched the show’s main character, Gorden Kaye, to find the role he was best known for in the show.
@@ -566,7 +602,7 @@
             </div>
         </details>
         <div class="response">
-            <div class="thought"><em>Thought 1:</em> I need to search the actor who was best known for a role on "’Allo ’Allo!" and find out what role they were best known for.</div>
+            <div class="thought"><mark data-step="21"><em>Thought 1:</em> I need to search the actor who was best known for a role on "’Allo ’Allo!" and find out what role they were best known for.</mark></div>
             <div class="action"><em>Action 1:</em> <span class="tool">Search[Grown-Ups]</span></div>
         </div>
         <div class="tool-response">
@@ -664,10 +700,10 @@
             </details>
         </details>
         <div class="response">
-            <div class="thought"><em>Thought 2:</em> The paragraph does not mention the actor who was best known for a role on "’Allo ’Allo!". I need to search the actor’s name instead.</div>
+            <div class="thought"><mark data-step="22"><em>Thought 2:</em> The paragraph does not mention the actor who was best known for a role on "’Allo ’Allo!". I need to search the actor’s name instead.</mark></div>
             <div class="action"><em>Action 2:</em> <span class="tool">Search[Sam Kelly]</span></div>
         </div>
-        <div class="tool-response">
+        <div class="tool-response" data-step="23">
             <div class="observation"><em>Observation 2:</em> Roger Michael Kelly (19 December 1943 – 14 June 2014), known by the stage name Sam Kelly, was an English actor who appeared in film, television, radio and theatre. He is best known for his roles as Captain Hans Geering in ’Allo ’Allo!, Warren in Porridge, Sam in On the Up, and Ted Liversidge in Barbara.</div>
         </div>
         <details class="prompt">
@@ -766,9 +802,9 @@
         </details>
         <div class="response">
             <div class="thought"><em>Thought 3:</em> Sam Kelly is best known for his role as Captain Hans Geering in "’Allo ’Allo!", so the answer is Captain Hans Geering.</div>
-            <div class="action"><em>Action 3:</em> <span class="tool">Finish[Captain Hans Geering]</span></div>
+            <div class="action"><em>Action 3:</em> <span class="tool" data-step="24">Finish[Captain Hans Geering]</span></div>
         </div>
-        <div class="tool-response">
+        <div class="tool-response" data-step="25">
             <div class="observation"><em>Observation 3:</em> Answer is CORRECT</div>
         </div>
     </div>
