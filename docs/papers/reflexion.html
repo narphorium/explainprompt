@@ -1,7 +1,7 @@
 <html>
 <head>
-    <title>Reflexion: Language Agents with Verbal Reinforcement Learning</title>
-    
+    <title>ExplainPrompt &mdash; Reflexion: Language Agents with Verbal Reinforcement Learning</title>
+    <link rel="icon" href="../logo.svg" type="image/svg"/>
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,14 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vscode-codicons@0.0.17/dist/codicon.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="../../../css/walkthrough.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/walkthrough.css">
     
     <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
-    <script src="../../../js/walkthrough.js"></script>
+    <script src="../js/walkthrough.js"></script>
 </head>
 <body>
 <div class="aside">
+    <div class="breadcrumbs">
+        <a href="../index.html">ExplainPrompt</a>
+        <span class="material-icons material-symbols-outlined">chevron_right</span>
+        Papers
+    </div>
     <h1>Reflexion: Language Agents with Verbal Reinforcement Learning</h1>
     <div class="citation">
         <div class="authors">Noah Shinn, Federico Cassano, Beck Labash, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao</div>
@@ -26,15 +31,15 @@
     </div>
     <div id="controls"></div>
     <div class="description" data-step="0">This is the sample question from the <a target="_blank" href="https://hotpotqa.github.io">HotpotQA dataset</a> which was used to evaluate Reflexion prompting on question answering tasks.</div>
-    <div class="description" data-step="1">The Actor prompt follows the same format as <a href="../../react/prompts/few-shot.html">ReAct</a> prompting.</div>
-    <div class="description" data-step="2">Tool definition</div>
+    <div class="description" data-step="1">The Actor prompt follows the same format as <a href="react.html">ReAct</a> prompting.</div>
+    <div class="description tool" data-step="2">Each tool definition shows how to call the tool and describes when that tool should be used. This is how the model decides which tool to use to answer the input question.</div>
     <div class="description" data-step="3">This part of the prompt is slightly different from the standard ReAct prompt. It is only in the GitHub repo and not covered in the paper.</div>
     <div class="description" data-step="4">The Reflexion few-shot examples are slightly longer than the ReAct examples because they include a self-reflection step.</div>
     <div class="description" data-step="5">The input question is placed at the end of the prompt to begin the next cycle of Thought, Action, Observation steps.</div>
     <div class="description" data-step="6">Here we see that the model has read the question and decided to call <span class="tool">Search[Grown-Ups]</span> to find out who starred in the TV show.</div>
     <div class="description tool" data-step="7">The <span class="tool">Search[]</span> tool takes a single text argument and searches Wikipedia for that term. The tool returns the first 5 sentences of text from the first matching result.</div>
     <div class="description tool" data-step="8">Here we can see the first 5 sentences of the Wikipedia page for <a target="_blank" href="https://en.wikipedia.org/wiki/Grown-Ups">Grown-Ups</a>.</div>
-    <div class="description" data-step="9">just like in <a href="../../react/prompts/few-shot.html">ReAct</a> prompting, the outputs from the previous cycle get added to the end of the prompt as a form of short-term memory. This is what enables the model to reflect on the outputs of the previous action and use that information when it decides on the next action to take.</div>
+    <div class="description" data-step="9">just like in <a href="react.html">ReAct</a> prompting, the outputs from the previous cycle get added to the end of the prompt as a form of short-term memory. This is what enables the model to reflect on the outputs of the previous action and use that information when it decides on the next action to take.</div>
     <div class="description" data-step="10">
         <p>Recall in <em>Thought 1</em>, the model decided that it needed to call both <span class="tool">Search[Grown-Ups]</span> and <span class="tool">Search["’Allo ’Allo!"]</span> to find which actor they have in common. However, since the ReAct prompting follows a strict Through, Action, Observation cycle, it can only run one tool per cycle.</p>
         <p>Now we see the follow-up cycle where the model has remembered the previous thought and is continuing it's original plan by calling <span class="tool">Search["’Allo ’Allo!"]</span>.</p>
@@ -46,8 +51,8 @@
     <div class="description" data-step="12">To recover from the previous error, the model chooses to <span class="tool">Search[Gorden Kaye]</span> from the list of similar pages in <em>Observation 2</em></div>
     <div class="description tool" data-step="13">Here we can see the first 5 sentences of the Wikipedia page for <a target="_blank" href="https://en.wikipedia.org/wiki/Gorden_Kaye">Gorden Kaye</a>.</div>
     <div class="description tool" data-step="14">The model decides that it has found the answer to the original input question and end the prompting cycle by calling <span class="tool">Finish[Rene Artois]</span>.</div>
-    <div class="description tool" data-step="15">However, unlike in the <a href="../../react/prompts/few-shot.html">ReAct</a> example, the prompting doesn't end here. The <span class="tool">Finish</span> tool is able to look up the correct answer from the evaluation dataset and add the result to the prompt cycle; letting the model know that it's answer is "INCORRECT".</div>
-    <div class="description" data-step="16">The Self-Reflection prompt is the major difference between Reflexion and <a href="../../react/prompts/few-shot.html">ReAct</a>. This is where the model is asked to look at the full trajectory of prompts so far and diagnose the possible reason for why the previous answer was unsuccessful.</div>
+    <div class="description tool" data-step="15">However, unlike in the <a href="react.html">ReAct</a> example, the prompting doesn't end here. The <span class="tool">Finish</span> tool is able to look up the correct answer from the evaluation dataset and add the result to the prompt cycle; letting the model know that it's answer is "INCORRECT".</div>
+    <div class="description" data-step="16">The Self-Reflection prompt is the major difference between Reflexion and <a href="react.html">ReAct</a>. This is where the model is asked to look at the full trajectory of prompts so far and diagnose the possible reason for why the previous answer was unsuccessful.</div>
     <div class="description" data-step="17">The few-shot examples are the same as in the Actor prompt. They both contain examples of self-reflection.</div>
     <div class="description" data-step="18">The previous trial is annotated as such and the "Reflection:" prompt is added to make sure that the model writes a reflection and doesn't get confused and try to jump right back into the Though, Action, Observation cycle.</div>
     <div class="description" data-step="19">The self-reflection accurately catches the bad tool call in the previous set of prompts but still doesn't know that Gorden Kaye only appeared on "’Allo ’Allo!" and not on Grown-Ups.</div>
@@ -75,8 +80,8 @@
         </div>
         <details class="prompt">
             <summary>Actor Prompt</summary>
-            <div data-step="1">
-            Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:<br/>
+            <div>
+            <mark data-step="1">Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</mark><br/>
             </div>
             <div class="tool-definitions">
             <details class="tool-definition" data-step="2">
