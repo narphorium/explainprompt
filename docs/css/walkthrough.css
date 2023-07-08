@@ -86,6 +86,7 @@ body {
 
 .aside h1 {
   margin: 0 0 16px 0;
+  line-height: 1.1em;
 }
 
 .aside .citation {
@@ -108,9 +109,9 @@ body {
   padding: 1em;
   border-radius: 4px;
   border: 1px solid var(--selected-border-color);
-  /* box-shadow: 0 4px 8px rgb(0 0 0 / 4%); */
   margin-top: 24px;
   font-size: 11pt;
+  line-height: 1.3em;
 }
 
 .aside .description.selected {
@@ -136,14 +137,46 @@ body {
   color: var(--selected-text-color);
 }
 
+.aside .results {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.aside .results tr:hover td {
+  background-color: var(--selected-tool-bg-color);
+}
+
+.aside .results th,
+.aside .results td {
+  font-size: 11pt;
+  color: var(--selected-text-color);
+}
+
+.aside .results thead th {
+  border-top: 2px solid var(--selected-text-color);
+  border-bottom: 1px solid var(--selected-text-color);
+  text-align: left;
+}
+
+.aside .results tr:last-child td {
+  border-bottom: 2px solid var(--selected-text-color);
+}
+
+.aside .results .numerical {
+  text-align: right;
+}
+
 .trajectory {
   width: var(--prompt-width);
-  margin-bottom: 500px;
+  margin-bottom: 100px;
 }
 
 h1 {
   font-weight: 500;
-  font-size: 24pt;
+  font-size: 20pt;
   margin-bottom: 0;
 }
 
@@ -176,6 +209,12 @@ h1 {
   border-width: 0;
 }
 
+.prompt .tool-definition.selected {
+  background-color: var(--tool-response-selected-bg-color);
+  color: var(--tool-reponse-selected-text-color);
+  animation: fadeInTool 1s;
+}
+
 .response,
 .prompt,
 .scratchpad,
@@ -197,7 +236,7 @@ details > div {
   margin: 8px 1em;
 }
 
-summary {
+details summary {
   margin: 2px 0;
   font-family: var(--default-font);
   font-size: 11pt;
@@ -206,12 +245,14 @@ summary {
   padding-left: 20px;
 }
 
-summary:focus {
+details summary:focus {
   outline: 0;
 }
 
-summary::marker {
-  content: none;
+details summary::marker,
+details summary::-webkit-details-marker {
+  display: none;
+  content: "";
 }
 
 summary::before {
