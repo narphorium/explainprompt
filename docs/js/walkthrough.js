@@ -94,7 +94,11 @@ function buildButton(iconName, title, onclick) {
                 this.goto(parseInt(mark.dataset.step));
             });
         });
-        this.goto(0);
+        if (location.hash.indexOf('#') == 0) {
+            this.goto(parseInt(location.hash.slice(1))-1);
+        } else {
+          this.goto(0);
+        }
     });
     
   }
@@ -130,6 +134,12 @@ function closeDetail(detail) {
       this.current_step = step;
       this.position.innerText = (this.current_step + 1) + ' of ' + this.num_steps;
 
+      if(history.pushState) {
+        history.replaceState(null, null, '#' + (this.current_step + 1));
+      } else {
+          location.hash = '#' + (this.current_step + 1);
+      }
+
       // Close all details that were open in the previous step
       // I commented this out because it was causing the page to jump around and make it harder to follow the walkthrough
       // document.querySelectorAll('details').forEach((detail) => {
@@ -146,7 +156,7 @@ function closeDetail(detail) {
             openDetail(mark);
           }
           openParentDetails(mark);
-          scroll_target = Math.min(scroll_target, mark.offsetTop - 260);
+          scroll_target = Math.max(0, Math.min(scroll_target, mark.offsetTop - 260));
         } else {
             mark.classList.remove('selected');
         }
