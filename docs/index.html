@@ -1,12 +1,131 @@
-<h1>Prompt Crafting Strategies</h1>
+<html>
+<head>
+    <title>ExplainPrompt</title>
 
-<h2>Papers</h2>
+    <link rel="icon" href="logo.svg" type="image/svg"/>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="js/diagram.js"></script>
+</head>
+<body>
+    
+    <h1>ExplainPrompt</h1>
+    <p>ExplainPrompt provides detailed walkthroughs of the large language model prompts from recent research papers.</p>
+<div id="container">
+    <div class="card">
+        <a href="papers/chain-of-thought.html">
+            <figure id="fig1"></figure>
+            <h2>Chain of Thought Prompting Elicits Reasoning in Large Language Models</h2>
+        </a>
+        <div class="citation">
+            <div class="authors">Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed Chi, Quoc Le, Denny Zhou</div>
+            <a target="_blank" href="http://arxiv.org/abs/2201.11903">arXiv:2201.11903</a> (<span class="year">2022</span>)
+        </div>
+    </div>
+    <div class="card">
+        <a href="papers/zero-shot-reasoners.html">
+            <figure id="fig2"></figure> 
+            <h2>Large Language Models Are Zero-Shot Reasoners</h2>
+        </a>
+        <div class="citation">
+            <div class="authors">Takeshi Kojima, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, Yusuke Iwasawa</div>
+            <a target="_blank" href="http://arxiv.org/abs/2205.11916">arXiv:2205.11916</a> (<span class="year">2022</span>)
+            <a target="_blank" href="https://github.com/kojima-takeshi188/zero_shot_cot"><i class="codicon codicon-github-inverted"></i></a>
+        </div>
+    </div>
+    <div class="card">
+        <a href="papers/react.html">
+            <figure id="fig3"></figure>
+            <h2>ReAct: Synergizing Reasoning and Acting in Language Models</h2>
+        </a>
+        <div class="citation">
+            <div class="authors">Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, Yuan Cao</div>
+            <a target="_blank" href="http://arxiv.org/abs/2210.03629">arXiv:2210.03629</a> (<span class="year">2022</span>)
+            <a target="_blank" href="https://github.com/ysymyth/ReAct/"><i class="codicon codicon-github-inverted"></i></a>
+        </div>
+    </div>
+    <div class="card">
+        <a href="papers/reflexion.html">
+            <figure id="fig4"></figure>
+            <h2>Reflexion: Language Agents with Verbal Reinforcement Learning</h2>
+        </a>
+        <div class="citation">
+            <div class="authors">Noah Shinn, Federico Cassano, Beck Labash, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao</div>
+            <a href="http://arxiv.org/abs/2303.11366">arXiv:2303.11366</a> (<span class="year">2023</span>)
+            <a target="_blank" href="https://github.com/noahshinn024/reflexion"><i class="codicon codicon-github-inverted"></i></a>
+        </div>
+    </div>
+</div>
+<script>
 
-<ul>
-    <li><a href="papers/chain-of-thought/prompts/few-shot.html">Chain of Thought Prompting Elicits Reasoning in Large Language Models</a></li>
-    <li><a href="papers/zero-shot-reasoners/prompts/zero-shot.html">Large Language Models Are Zero-Shot Reasoners</a></li>
-    <li><a href="papers/plan-and-solve/prompts/zero-shot.html">Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models</a></li>
-    <li><a href="papers/toolformer/prompts/finetuned.html">Toolformer: Language Models Can Teach Themselves to Use Tools</a></li>
-    <li><a href="papers/react/prompts/finetuned.html">ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
-    <li><a href="papers/reflexion/prompts/few-shot.html">Reflexion: Language Agents with Verbal Reinforcement Learning</a></li>
-</ul>
+diagram(document.getElementById('fig1'), 
+[{
+    'type': 'prompt',
+    'items': ['examples', 'prompt']
+}, {
+    'type': 'model'
+}, {
+    'type': 'prompt',
+    'items': ['prompt']
+}])
+
+diagram(document.getElementById('fig2'), 
+[{
+    'type': 'prompt',
+    'items': ['prompt', 'prompt']
+}, {
+    'type': 'model'
+}, {
+    'type': 'prompt',
+    'items': ['prompt']
+}, {
+    'type': 'model'
+}, {
+    'type': 'prompt',
+    'items': ['prompt']
+}])
+
+diagram(document.getElementById('fig3'), 
+[{
+    'type': 'prompt',
+    'items': ['prompt', 'tools', 'examples', 'prompt']
+}, {
+    'type': 'model'
+}, {
+    'type': 'prompt',
+    'items': ['prompt', 'action']
+}, {
+    'type': 'tool',
+    'backlink': 0
+}, {
+    'type': 'prompt',
+    'items': ['prompt']
+}])
+
+diagram(document.getElementById('fig4'), 
+[{
+    'type': 'prompt',
+    'items': ['prompt', 'tools', 'examples', 'prompt']
+}, {
+    'type': 'model'
+}, {
+    'type': 'prompt',
+    'items': ['prompt', 'action']
+}, {
+    'type': 'tool',
+    'backlink': 0
+}, {
+    'type': 'prompt',
+    'items': ['prompt']
+}, {
+    'type': 'tool',
+    'backlink': 0
+}])
+
+</script>
+<footer>Created by <a target="_blank" href="http://twitter.com/narphorium">Shawn Simister</a></footer>
+</body>
+</html>
