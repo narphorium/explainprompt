@@ -29,39 +29,42 @@
         <a target="_blank" href="https://github.com/ysymyth/ReAct/"><i class="codicon codicon-github-inverted"></i></a>
     </div>
     <div id="controls"></div>
-    <div class="description" data-step="0">This is the sample question from the <a target="_blank" href="https://hotpotqa.github.io">HotpotQA dataset</a> which was used to evaluate ReAct prompting on question answering tasks.</div>
-    <div class="description" data-step="1">The prompt starts with instructions for the model to follow the Thought, Action, Observation cycle of ReAct prompting, followed by a list of available tools.</div>
-    <div class="description tool" data-step="2">Each tool definition shows how to call the tool and describes when that tool should be used. This is how the model decides which tool to use to answer the input question.</div>
-    <div class="description" data-step="3">After the tools are defined, there are 6 few-shot examples which show the model example ReAct prompting trajectories being used to answer questions.</div>
-    <div class="description" data-step="4">Each example follows the format of a multiple cycles of Thoughts, Actions, and Observations. Each example end with a call to the <span class="tool">Finish[]</span> tool.</div>
-    <div class="description" data-step="5">The last part of the prompt is the input question. You can think of this as the start of the 7th few-shot example. This helps makes it easy for the model to continue with the same style of ReAct propting that it has just seen.</div>
-    <div class="description" data-step="6">
+    <div class="description" data-step="0"><em>Summary:</em> This research paper introduces ReAct, a novel approach that combines reasoning and action generation in language models, creating a more synergistic and effective problem-solving capability. ReAct is distinct as it generates interleaved reasoning traces and actions, allowing models to perform dynamic reasoning, formulate high-level action plans, and interact with external environments for additional information. Evaluated on diverse benchmarks, ReAct outperformed existing methods in success rates and interpretability. It addresses issues such as hallucination and error propagation in chain-of-thought reasoning by interacting with external sources like Wikipedia API. </div>
+    <div class="description" data-step="1">This is the sample question from the <a target="_blank" href="https://hotpotqa.github.io">HotpotQA dataset</a> which was used to evaluate ReAct prompting on question answering tasks.</div>
+    <div class="description" data-step="2">The prompt starts with instructions for the model to follow the Thought, Action, Observation cycle of ReAct prompting, followed by a list of available tools.</div>
+    <div class="description tool" data-step="3">Each tool definition shows how to call the tool and describes when that tool should be used. This is how the model decides which tool to use to answer the input question.</div>
+    <div class="description" data-step="4">After the tools are defined, there are 6 few-shot examples which show the model example ReAct prompting trajectories being used to answer questions.</div>
+    <div class="description" data-step="5">Each example follows the format of a multiple cycles of Thoughts, Actions, and Observations. Each example end with a call to the <span class="tool">Finish[]</span> tool.</div>
+    <div class="description" data-step="6">The last part of the prompt is the input question. You can think of this as the start of the 7th few-shot example. This helps makes it easy for the model to continue with the same style of ReAct propting that it has just seen.</div>
+    <div class="description" data-step="7">
         <p>Each cycle of ReAct prompting starts with a Thought. These thoughts are similar to <a href="chain-of-thought.html">Chain-of-Thought</a> prompting where the model can flesh out intermediate steps before attempting to give the final answer.</p>
         <p>Here the model recognizes that the question is about the Apple Remote and decides that it should use the <span class="tool">Search</span> tool to get more information about the Apple Remote.</p>
     </div>
-    <div class="description tool" data-step="7">The <span class="tool">Search[]</span> tool takes a single text argument and searches Wikipedia for that term. The tool returns the first 5 sentences of text from the first matching result.</div>
-    <div class="description tool" data-step="8">Here we can see the Wikipedia description of the <a target="_blank" href="https://en.wikipedia.org/wiki/Apple_Remote">Apple Remote</a>.</div>
-    <div class="description" data-step="9">In the next cycle of prompting, the outputs from the previous cycle get added to the end of the prompt as a form of short-term memory. This is what enables the model to reflect on the outputs of the previous action and use that information when it decides on the next action to take.</div>
-    <div class="description" data-step="10">Here we can see that the model accurately parsed the output from the previous <span class="tool">Search[Apple Remote]</span> action and has used that information to plan it's next action which is to <span class="tool">Search[Front Row]</span></div>
-    <div class="description tool" data-step="11">This is the response that the <span class="tool">Search</span> tool returns when there is no exact match on Wikipedia. These are the recommended similar pages as shown in Wikipedia search UI. Having helpful error messages like this are what allows ReAct prompting to recover from errors and explore alternative solutions.</div>
-    <div class="description" data-step="12">Here we can see that the model has parsed the error message and decided to attempt <span class="tool">Search[Front Row (software)]</span> instead. Notice that this was not the top recommendation that Wikipedia Search returned but the model was able to pick the correct recommendation by using the conversation history in the prompt to infer that the software company is the right choice.</div>
-    <div class="description tool" data-step="13">Here are the first 5 sentences from the <a target="_blank" href="https://en.wikipedia.org/wiki/Front_Row_(software)">Front Row (software)</a> Wikipedia page.</div>
-    <div class="description" data-step="14">The model is able to accurately parse the description of "Front Row (software)" and infer that the answer to the original input question is "keyboard function keys".</div>
-    <div class="description tool" data-step="15">To end the ReAct prompting loop, the model calls the <span class="tool">Finish[keyboard function keys]</span> tool. This also provides a nice way of capturing the final answer in a concise form which can be matched against the expected answer from the evaluation dataset without having to parse it out of the full-sentence answer in the previous thought.</div>
+    <div class="description tool" data-step="8">The <span class="tool">Search[]</span> tool takes a single text argument and searches Wikipedia for that term. The tool returns the first 5 sentences of text from the first matching result.</div>
+    <div class="description tool" data-step="9">Here we can see the Wikipedia description of the <a target="_blank" href="https://en.wikipedia.org/wiki/Apple_Remote">Apple Remote</a>.</div>
+    <div class="description" data-step="10">In the next cycle of prompting, the outputs from the previous cycle get added to the end of the prompt as a form of short-term memory. This is what enables the model to reflect on the outputs of the previous action and use that information when it decides on the next action to take.</div>
+    <div class="description" data-step="11">Here we can see that the model accurately parsed the output from the previous <span class="tool">Search[Apple Remote]</span> action and has used that information to plan it's next action which is to <span class="tool">Search[Front Row]</span></div>
+    <div class="description tool" data-step="12">This is the response that the <span class="tool">Search</span> tool returns when there is no exact match on Wikipedia. These are the recommended similar pages as shown in Wikipedia search UI. Having helpful error messages like this are what allows ReAct prompting to recover from errors and explore alternative solutions.</div>
+    <div class="description" data-step="13">Here we can see that the model has parsed the error message and decided to attempt <span class="tool">Search[Front Row (software)]</span> instead. Notice that this was not the top recommendation that Wikipedia Search returned but the model was able to pick the correct recommendation by using the conversation history in the prompt to infer that the software company is the right choice.</div>
+    <div class="description tool" data-step="14">Here are the first 5 sentences from the <a target="_blank" href="https://en.wikipedia.org/wiki/Front_Row_(software)">Front Row (software)</a> Wikipedia page.</div>
+    <div class="description" data-step="15">The model is able to accurately parse the description of "Front Row (software)" and infer that the answer to the original input question is "keyboard function keys".</div>
+    <div class="description tool" data-step="16">To end the ReAct prompting loop, the model calls the <span class="tool">Finish[keyboard function keys]</span> tool. This also provides a nice way of capturing the final answer in a concise form which can be matched against the expected answer from the evaluation dataset without having to parse it out of the full-sentence answer in the previous thought.</div>
+    <footer>Created by <a target="_blank" href="http://twitter.com/narphorium">Shawn Simister</a></footer>
 </div>
 <script>
     new Walkthrough(document.getElementById('controls'));
 </script>
 <div class="trajectory">
     <div class="conversation">
-        <div class="response" data-step="0">
+        <div data-step="0"></div>
+        <div class="response" data-step="1">
             <div class="question"><em>Question:</em> Aside from the Apple Remote, what other device can control the program App Remote was originally designed to interact with?</div>
         </div>
         <details class="prompt">
             <summary>Prompt</summary>
-            <div><mark data-step="1">Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</mark></div>
+            <div><mark data-step="2">Solve a question answering task with interleaving Thought, Action, Observation steps. Thought can reason about the current situation, and Action can be three types:</mark></div>
             <div class="tool-definitions">
-                <details class="tool-definition" data-step="2">
+                <details class="tool-definition" data-step="3">
                     <summary>Search Tool</summary>
                     <div>(1) Search[entity], which searches the exact entity on Wikipedia and returns the first paragraph if it exists. If not, it will return some similar entities to search.</div>
                 </details>
@@ -74,9 +77,9 @@
                     <div>(3) Finish[answer], which returns the answer and finishes the task.</div>
                 </details>
             </div>
-            <div><mark data-step="3">Here are some examples.</mark></div>
+            <div><mark data-step="4">Here are some examples.</mark></div>
             <div class="examples">
-                <details class="example" data-step="4">
+                <details class="example" data-step="5">
                     <summary>Example 1</summary>
                     <div>
                         <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
@@ -167,13 +170,13 @@
                     </div>
                 </details>
             </div>
-            <div><mark data-step="5"><em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?</mark></div>
+            <div><mark data-step="6"><em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?</mark></div>
         </details>
         <div class="response">
-            <div class="thought"><mark data-step="6"><em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.</mark></div>
-            <div class="action"><em>Action 1:</em> <span class="tool" data-step="7">Search[Apple Remote]</span></div>
+            <div class="thought"><mark data-step="7"><em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.</mark></div>
+            <div class="action"><em>Action 1:</em> <span class="tool" data-step="8">Search[Apple Remote]</span></div>
         </div>
-        <div class="tool-response" data-step="8">
+        <div class="tool-response" data-step="9">
             <div class="observation"><em>Observation 1:</em> The Apple Remote is a remote control introduced in October 2005 by Apple Inc. for use with a number of its products with infrared capability. It was originally designed to control the Front Row media center program on the iMac G5 and is compatible with many subsequent Macintosh computers. The first three generations of Apple TV used the Apple Remote as their primary control mechanism. It has now been replaced with the Siri Remote in the fourth generation.</div>
         </div>
         <details class="prompt">
@@ -289,7 +292,7 @@
             <div>
                 <em>Question:</em> What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?<br/>
             </div>
-            <details class="scratchpad" data-step="9">
+            <details class="scratchpad" data-step="10">
                 <summary>Scratchpad</summary>
                 <div>
                     <em>Thought 1:</em> I need to search Apple Remote and find the program it was originally designed to interact with.<br/>
@@ -299,10 +302,10 @@
             </details>
         </details>
         <div class="response">
-            <div class="thought"><mark data-step="10"><em>Thought 2:</em> The Apple Remote was originally designed to control the Front Row media program. I need to search Front Row next and find what other devices it can control.</mark></div>
+            <div class="thought"><mark data-step="11"><em>Thought 2:</em> The Apple Remote was originally designed to control the Front Row media program. I need to search Front Row next and find what other devices it can control.</mark></div>
             <div class="action"><em>Action 2:</em> <span class="tool">Search[Front Row]</span></div>
         </div>
-        <div class="tool-response" data-step="11">
+        <div class="tool-response" data-step="12">
             <div class="observation"><em>Observation 2:</em> Could not find [Front Row]. Similar: ['Front Row Motorsports', 'Front Row', 'Rugby league positions (redirect from The front row)', 'Front Row (software)', 'Murder in the Front Row'].</div>
         </div>
         <details class="prompt">
@@ -431,10 +434,10 @@
             </details>
         </details>
         <div class="response">
-            <div class="thought"><mark data-step="12"><em>Thought 3:</em> Front Row is not found. I need to search  Front Row (software) .</mark></div>
+            <div class="thought"><mark data-step="13"><em>Thought 3:</em> Front Row is not found. I need to search  Front Row (software) .</mark></div>
             <div class="action"><em>Action 3:</em> <span class="tool">Search[Front Row (software)]</span></div>
         </div>
-        <div class="tool-response" data-step="13">
+        <div class="tool-response" data-step="14">
             <div class="observation"><em>Observation 3:</em> Front Row is a discontinued media center software application for Apple's Macintosh computers and Apple TV for navigating and viewing video, photos, podcasts and music from a computer, optical disc or the Internet through a 10-foot user interface (similar to Kodi and Windows Media Center). The software relies on iTunes and iPhoto and is controlled by an Apple Remote or the keyboard function keys. The first version was released in October 2005, with two major revisions since. Front Row was removed and discontinued in Mac OS X 10.7.[1]. Front Row was first unveiled on October 12, 2005 with the new iMac G5 (along with the built-in iSight camera, the Apple Remote, and Photo Booth).</div>
         </div>
         <details class="prompt">
@@ -566,8 +569,8 @@
             </details>
         </details>
         <div class="response">
-            <div class="thought"><mark data-step="14"><em>Thought 4:</em> Front Row (software) is controlled by Apple Remote or the keyboard function keys. So the answer is keyboard function keys.</mark></div>
-            <div class="action"><em>Action 4:</em> <span class="tool" data-step="15">Finish[keyboard function keys]</span></div>
+            <div class="thought"><mark data-step="15"><em>Thought 4:</em> Front Row (software) is controlled by Apple Remote or the keyboard function keys. So the answer is keyboard function keys.</mark></div>
+            <div class="action"><em>Action 4:</em> <span class="tool" data-step="16">Finish[keyboard function keys]</span></div>
         </div>
     </div>
 </div>
