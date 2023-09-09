@@ -1,0 +1,22 @@
+[build-system]
+requires = [
+  "setuptools >= 40.9.0",
+  "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "explainprompt"
+dynamic = ["version"]
+dependencies = [
+  "anywidget",
+  "ipykernel",
+  "markdown",
+  "notebook",
+  "pycodestyle",
+  "pydantic",
+  "pydocstyle",
+  "pytest",
+  "tqdm",
+  "watchfiles",
+]
