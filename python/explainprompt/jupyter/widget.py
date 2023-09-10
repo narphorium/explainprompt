@@ -12,7 +12,7 @@ def loadResource(name: str):
 
 
 class ExplainPromptWidget(anywidget.AnyWidget):
-    _esm = loadResource('explainprompt.js')
+    _esm = loadResource('widget.js')
     _css = loadResource('widget.css')
     data = traitlets.Unicode('{"label":"Test"}').tag(sync=True)
     theme = traitlets.Unicode('light').tag(sync=True)

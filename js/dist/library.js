@@ -1,293 +1,101 @@
-import React, { createContext, useReducer, useEffect, useContext, useState, useCallback, useRef, createElement } from 'react';
-import { selectedVariants, NamedBlock, BlockListItem, BlockList, ContentBlock, ContentSection, ContentSpan, DefaultBlockFactory, Selectable, List, Content, Section, SentinalView, Span, NamedContent, BlockFactoryContext, BlockStream } from 'ai-construction-set';
-import { createRoot } from 'react-dom/client';
-import styled, { ThemeProvider } from 'styled-components';
-import theme from 'styled-theming';
-
-const SelectedStepContext = createContext({
-    step: 1,
-    setStep: (step) => { }
-});
-const SelectedElementContext = createContext({
-    element: undefined,
-    setElement: (element) => { }
-});
-const ScrollFlagContext = createContext({
-    flag: false,
-    toggle: () => { }
-});
-class StepState {
-    step = 1;
-    numSteps = 1;
-}
-const StepReducer = (state, action) => {
-    switch (action.type) {
-        case "start":
-            return {
-                step: 1,
-                numSteps: state.numSteps
-            };
-        case "end":
-            return {
-                step: Math.max(1, state.numSteps),
-                numSteps: state.numSteps
-            };
-        case "previous":
-            return {
-                step: Math.max(1, state.step - 1),
-                numSteps: state.numSteps
-            };
-        case "next":
-            return {
-                step: Math.min(state.numSteps, state.step + 1),
-                numSteps: state.numSteps
-            };
-        case "goto":
-            return {
-                step: Math.min(state.numSteps, Math.max(1, action.step)),
-                numSteps: state.numSteps
-            };
-        default:
-            throw new Error("Invalid action");
-    }
-};
-const StepContext = createContext(null);
-const StepDispatchContext = createContext(null);
-const StepProvider = ({ step, numSteps, onChange, children }) => {
-    const [state, dispatch] = useReducer(StepReducer, {
-        step: step,
-        numSteps: numSteps
-    });
-    useEffect(() => {
-        if (onChange) {
-            onChange(state);
-        }
-    }, [state]);
-    return React.createElement(StepContext.Provider, { value: state },
-        React.createElement(StepDispatchContext.Provider, { value: dispatch }, children));
-};
-
-const promptTextColor = selectedVariants('mode', {
-    default: { light: '#666', dark: '#bbb' },
-    selected: { light: '#222', dark: '#ffde98' },
-});
-const selectedTextColor = theme('mode', {
-    light: '#222',
-    dark: '#ffde98',
-});
-const promptBgColor = selectedVariants('mode', {
-    default: { light: 'transparent', dark: 'transparent' },
-    selected: { light: 'rgb(253 235 184)', dark: 'rgb(73 69 61)' },
-});
-const promptBorderColor = selectedVariants('mode', {
-    default: { light: '#ccc', dark: '#595b60' },
-    selected: { light: 'rgb(237, 211, 137)', dark: 'rgb(109 102 81)' },
-});
-const promptFont = '"Roboto Mono", monospace';
-const PromptNamedContentBlock = styled(NamedBlock) `
-    color: ${promptTextColor};
-    background-color: ${promptBgColor};
-    border-color: ${promptBorderColor};
-    font-family: ${promptFont};
+import e,{createContext as t,useReducer as s,useEffect as l,forwardRef as n,useContext as o,useState as c,useCallback as a,useRef as r,createElement as d}from"react";import{selectedVariants as i,NamedBlock as p,BlockListItem as m,BlockList as u,ContentBlock as h,ContentSection as g,ContentSpan as f,DefaultBlockFactory as b,Selectable as S,List as k,Content as N,Section as y,Code as x,SentinalView as C,Span as E,NamedContent as $,BlockFactoryContext as w,BlockStream as v}from"ai-construction-set";import{createRoot as O}from"react-dom/client";import T,{styled as _,ThemeProvider as I}from"styled-components";import M from"styled-theming";import{python as z}from"@codemirror/lang-python";import{vscodeDark as P}from"@uiw/codemirror-theme-vscode";import R from"@uiw/react-codemirror";const A=t({step:1,setStep:e=>{}}),L=t({element:void 0,setElement:e=>{}}),V=t({flag:!1,toggle:()=>{}});class j{step=1;numSteps=1}const F=(e,t)=>{switch(t.type){case"start":return{step:1,numSteps:e.numSteps};case"end":return{step:Math.max(1,e.numSteps),numSteps:e.numSteps};case"previous":return{step:Math.max(1,e.step-1),numSteps:e.numSteps};case"next":return{step:Math.min(e.numSteps,e.step+1),numSteps:e.numSteps};case"goto":return{step:Math.min(e.numSteps,Math.max(1,t.step)),numSteps:e.numSteps};default:throw new Error("Invalid action")}},J=t(null),U=t(null),q=({step:t,numSteps:n,onChange:o,children:c})=>{const[a,r]=s(F,{step:t,numSteps:n});return l((()=>{o&&o(a)}),[a]),e.createElement(J.Provider,{value:a},e.createElement(U.Provider,{value:r},c))},B=i("mode",{default:{light:"#666",dark:"#bbb"},selected:{light:"#222",dark:"#ffde98"}}),D=M("mode",{light:"#222",dark:"#ffde98"}),G=i("mode",{default:{light:"transparent",dark:"transparent"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),H=i("mode",{default:{light:"#ccc",dark:"#595b60"},selected:{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}}),K='"Roboto Mono", monospace',Q=T(p)`
+    color: ${B};
+    background-color: ${G};
+    border-color: ${H};
+    font-family: ${K};
 
     & .aics-collapsible-block-title {
-        color: ${promptTextColor};
+        color: ${B};
     }
 
     &.selected .aics-collapsible-block-title {
-        color: ${selectedTextColor};
+        color: ${D};
     }
 
     & .aics-collapsible-block-control {
-        color: ${promptTextColor};
+        color: ${B};
     }
-`;
-const promptListItemBorderColor = theme('mode', {
-    light: '#ccc',
-    dark: '#595b60',
-});
-const PromptBlockListItem = styled(BlockListItem) `
-    border-color: ${promptListItemBorderColor};
-    background-color: ${promptBgColor};
-`;
-const promptToolTextColor$1 = selectedVariants('mode', {
-    default: { light: '#222', dark: '#b3d7f8' },
-    selected: { light: '#222', dark: '#bcdefe' },
-});
-const promptToolBgColor$1 = selectedVariants('mode', {
-    default: { light: 'transparent', dark: 'transparent' },
-    selected: { light: '#d8edff', dark: 'rgb(60 108 194 / 24%)' },
-});
-const promptToolSelectedTextColor = theme('mode', {
-    light: '#222',
-    dark: '#bcdefe'
-});
-const PromptToolListItem = styled(PromptBlockListItem) `
-    color: ${promptToolTextColor$1};
-    background-color: ${promptToolBgColor$1};
+`,W=M("mode",{light:"#ccc",dark:"#595b60"}),X=T(m)`
+    border-color: ${W};
+    background-color: ${G};
+`,Y=i("mode",{default:{light:"#222",dark:"#b3d7f8"},selected:{light:"#222",dark:"#bcdefe"}}),Z=i("mode",{default:{light:"transparent",dark:"transparent"},selected:{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}}),ee=M("mode",{light:"#222",dark:"#bcdefe"}),te=T(X)`
+    color: ${Y};
+    background-color: ${Z};
 
     &.selected .aics-content-span,
     &.selected .aics-content-section > span > label {
-        color: ${promptToolSelectedTextColor} !important;
+        color: ${ee} !important;
     }
-`;
+`,se=T(u)`
+    background-color: ${G};
+    border-color: ${H};
+    color: ${B};
+`,le=_(n((({className:t,code:s,extensions:l,selected:n,onSelected:o,onClick:c,onChange:a,editable:r,key:d},i)=>{let p="";s.spans.forEach((e=>{p+=e.content}));let m=[];return void 0!==l&&(m=m.concat(l)),m.push(z()),e.createElement("div",{ref:i,className:(()=>{let e=["aics-code-section"];return t&&("string"==typeof t?e.push(t):Array.isArray(t)&&(e=e.concat(t))),n&&e.push("selected"),e.join(" ")})(),onClick:e=>{void 0!==c&&c(e)}},e.createElement(R,{value:p,basicSetup:!1,theme:P,editable:r,extensions:m,onChange:(e,t)=>{void 0!==a&&a(e,t)}}))})))`
 
-const PromptBlockList = styled(BlockList) `
-    background-color: ${promptBgColor};
-    border-color: ${promptBorderColor};
-    color: ${promptTextColor};
-`;
-
-/* Model response */
-const responseTextColor = selectedVariants('mode', {
-    default: { light: '#222', dark: '#292b2f' },
-    selected: { light: '#222', dark: '#ffde98' },
-});
-const responseBgColor = selectedVariants('mode', {
-    default: { light: 'white', dark: '#292b2f' },
-    selected: { light: 'rgb(253 235 184)', dark: 'rgb(73 69 61)' },
-});
-const responseBorderColor = selectedVariants('mode', {
-    default: { light: '#ccc', dark: '#595b60' },
-    selected: { light: 'rgb(237, 211, 137)', dark: 'rgb(109 102 81)' },
-});
-const ModelResponse = styled(ContentBlock) `
-    color: ${responseTextColor};
-    background-color: ${responseBgColor};
-    border-color: ${responseBorderColor};
-`;
-/* Tool Response */
-const toolResponseTextColor = selectedVariants('mode', {
-    default: { light: '#222', dark: '#b3d7f8' },
-    selected: { light: '#222', dark: '#bcdefe' },
-});
-const toolResponseBgColor = selectedVariants('mode', {
-    default: { light: 'rgb(242 249 255)', dark: '#292b2f' },
-    selected: { light: '#d8edff', dark: 'rgb(60 108 194 / 24%)' },
-});
-const toolResponseBorderColor = selectedVariants('mode', {
-    default: { light: '#b4d9ff', dark: '#4a5f79' },
-    selected: { light: '#a0c1e3', dark: '#4a5f79' },
-});
-const toolResponseSelectedTextColor = theme('mode', {
-    light: '#222',
-    dark: '#bcdefe'
-});
-const ToolResponse = styled(ContentBlock) `
-    color: ${toolResponseTextColor};
-    background-color: ${toolResponseBgColor};
-    border-color: ${toolResponseBorderColor};
+`,ne=i("mode",{default:{light:"#222",dark:"#292b2f"},selected:{light:"#222",dark:"#ffde98"}}),oe=i("mode",{default:{light:"white",dark:"#292b2f"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),ce=i("mode",{default:{light:"#ccc",dark:"#595b60"},selected:{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}}),ae=T(h)`
+    color: ${ne};
+    background-color: ${oe};
+    border-color: ${ce};
+`,re=i("mode",{default:{light:"#222",dark:"#b3d7f8"},selected:{light:"#222",dark:"#bcdefe"}}),de=i("mode",{default:{light:"rgb(242 249 255)",dark:"#292b2f"},selected:{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}}),ie=i("mode",{default:{light:"#b4d9ff",dark:"#4a5f79"},selected:{light:"#a0c1e3",dark:"#4a5f79"}}),pe=M("mode",{light:"#222",dark:"#bcdefe"}),me=T(h)`
+    color: ${re};
+    background-color: ${de};
+    border-color: ${ie};
 
     & .aics-content-section > span > label,
     & .aics-content-span {
-        color: ${toolResponseTextColor} !important;
+        color: ${re} !important;
     }
 
     &.selected .aics-content-span,
     &.selected .aics-content-section > span > label {
-        color: ${toolResponseSelectedTextColor} !important;
+        color: ${pe} !important;
     }
-`;
-/* Descriptions */
-const descriptionTextColor = theme('mode', {
-    light: '#222',
-    dark: '#ffde98',
-});
-const descriptionBgColor = theme('mode', {
-    light: 'rgb(253 235 184)',
-    dark: 'rgb(73 69 61)',
-});
-const descriptionBorderColor = theme('mode', {
-    light: 'rgb(237, 211, 137)',
-    dark: 'rgb(109 102 81)',
-});
-const toolDescriptionTextColor = theme('mode', {
-    light: '#222',
-    dark: '#bcdefe',
-});
-const toolDescriptioneBgColor = theme('mode', {
-    light: '#d8edff',
-    dark: 'rgb(60 108 194 / 24%)',
-});
-const toolDescriptionBorderColor = theme('mode', {
-    light: '#a0c1e3',
-    dark: '#4a5f79',
-});
-const DescriptionBlock = styled(ContentBlock) `
-    color: ${descriptionTextColor};
-    background-color: ${descriptionBgColor};
-    border-color: ${descriptionBorderColor};
+`,ue=M("mode",{light:"#222",dark:"#ffde98"}),he=M("mode",{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}),ge=M("mode",{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}),fe=M("mode",{light:"#222",dark:"#bcdefe"}),be=M("mode",{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}),Se=M("mode",{light:"#a0c1e3",dark:"#4a5f79"}),ke=T(h)`
+    color: ${ue};
+    background-color: ${he};
+    border-color: ${ge};
 
     & a {
-        color: ${descriptionTextColor};
+        color: ${ue};
     }
 
     &.tool-description {
-        color: ${toolDescriptionTextColor};
-        background-color: ${toolDescriptioneBgColor};
-        border-color: ${toolDescriptionBorderColor};
+        color: ${fe};
+        background-color: ${be};
+        border-color: ${Se};
 
         .aics-content-span,
         .aics-content-section > span > label {
-            color: ${toolResponseSelectedTextColor} !important;
+            color: ${pe} !important;
         }
 
         a {
-            color: ${toolResponseSelectedTextColor};
+            color: ${pe};
         }
     }
-`;
-
-const selectedLabelColor = theme('mode', {
-    light: '#222',
-    dark: '#ffde98',
-});
-const PromptContentSection = styled(ContentSection) `
-    color: ${promptTextColor} !important;
+`,Ne=M("mode",{light:"#222",dark:"#ffde98"}),ye=T(g)`
+    color: ${B} !important;
     font-size: 10pt;
     
     & > span > label {
-        color: ${promptTextColor} !important;
+        color: ${B} !important;
     }
 
     .selected & > span > label {
-        color: ${selectedLabelColor} !important;
+        color: ${Ne} !important;
     }
-`;
-
-const spanTextColor = selectedVariants('mode', {
-    default: { light: 'inherit', dark: 'inherit' },
-    selected: { light: '#222', dark: '#ffde98' },
-});
-const selectedChildSpanColor = theme('mode', {
-    light: '#222',
-    dark: '#ffde98',
-});
-const selectedChildBgColor = theme('mode', {
-    light: 'rgb(0 0 0 / 8%)',
-    dark: 'rgb(255 255 255 / 8%)',
-});
-const PromptContentSpan = styled(ContentSpan) `
-    color: ${spanTextColor};
-    font-family: ${promptFont};
+`,xe=i("mode",{default:{light:"inherit",dark:"inherit"},selected:{light:"#222",dark:"#ffde98"}}),Ce=M("mode",{light:"#222",dark:"#ffde98"}),Ee=M("mode",{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"}),$e=T(f)`
+    color: ${xe};
+    font-family: ${K};
     font-size: 10pt;
 
     .selected & {
-        color: ${selectedChildSpanColor} !important;
+        color: ${Ce} !important;
     }
-`;
-const toolTextColor = selectedVariants('mode', {
-    default: { light: '#007fff', dark: '#7dbdff' },
-    selected: { light: '#fff', dark: '#fff' },
-});
-const toolBgColor = selectedVariants('mode', {
-    default: { light: 'rgb(0 127 255 / 10%)', dark: 'rgb(84 169 255 / 20%)' },
-    selected: { light: 'rgb(82 162 244)', dark: 'rgb(47 98 161)' },
-});
-const ToolContentSpan = styled(PromptContentSpan) `
-    color: ${toolTextColor};
-    background-color: ${toolBgColor};
-    font-family: ${promptFont};
+`,we=i("mode",{default:{light:"#007fff",dark:"#7dbdff"},selected:{light:"#fff",dark:"#fff"}}),ve=i("mode",{default:{light:"rgb(0 127 255 / 10%)",dark:"rgb(84 169 255 / 20%)"},selected:{light:"rgb(82 162 244)",dark:"rgb(47 98 161)"}}),Oe=T($e)`
+    color: ${we};
+    background-color: ${ve};
+    font-family: ${K};
     padding: 2px 6px 2px 22px;
     border-radius: 4px;
     position: relative;
@@ -307,474 +115,17 @@ const ToolContentSpan = styled(PromptContentSpan) `
     }
 
     .selected & {
-        color: ${selectedChildSpanColor} !important;
-        background-color: ${selectedChildBgColor};
+        color: ${Ce} !important;
+        background-color: ${Ee};
     }
-`;
-const promptToolTextColor = selectedVariants('mode', {
-    default: { light: 'inherit', dark: 'inherit' },
-    selected: { light: '#fff', dark: '#ffde98' },
-});
-const promptToolBgColor = selectedVariants('mode', {
-    default: { light: 'rgb(0 0 0 / 8%)', dark: 'rgb(255 255 255 / 8%)' },
-    selected: { light: 'rgb(82 162 244)', dark: 'rgb(47 98 161)' },
-});
-const PromptToolContentSpan = styled(ToolContentSpan) `
-    color: ${promptToolTextColor};
-    background-color: ${promptToolBgColor};
-`;
-const specialTokenTextColor = selectedVariants('mode', {
-    default: { light: '#666', dark: '#bbb' },
-    selected: { light: '#222', dark: '#ffde98' },
-});
-const specialTokenBgColor = selectedVariants('mode', {
-    default: { light: 'rgb(0 0 0 / 8%)', dark: 'rgb(255 255 255 / 8%)' },
-    selected: { light: 'rgb(253 235 184)', dark: 'rgb(73 69 61)' },
-});
-const SpecialTokenSpan = styled(PromptContentSpan) `
-    color: ${specialTokenTextColor};
-    background-color: ${specialTokenBgColor};
+`,Te=i("mode",{default:{light:"inherit",dark:"inherit"},selected:{light:"#fff",dark:"#ffde98"}}),_e=i("mode",{default:{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"},selected:{light:"rgb(82 162 244)",dark:"rgb(47 98 161)"}}),Ie=T(Oe)`
+    color: ${Te};
+    background-color: ${_e};
+`,Me=i("mode",{default:{light:"#666",dark:"#bbb"},selected:{light:"#222",dark:"#ffde98"}}),ze=i("mode",{default:{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),Pe=T($e)`
+    color: ${Me};
+    background-color: ${ze};
     margin: 0 4px;
     padding: 2px 6px;
     border-radius: 4px;
     display: inline-block;
-`;
-
-class PaperBlockFactory extends DefaultBlockFactory {
-    getClassNames(block, selected_index) {
-        const classNames = [];
-        if (block instanceof Selectable) {
-            if (block.selection_index !== null) {
-                classNames.push('selectable');
-            }
-            if (selected_index === block.selection_index) {
-                classNames.push('selected');
-            }
-        }
-        return classNames;
-    }
-    ;
-    useStep() {
-        return useContext(StepContext);
-    }
-    useSelected(block) {
-        const step = this.useStep();
-        const [selected, setSelected] = useState(block.selected);
-        useEffect(() => {
-            if (step != undefined) {
-                setSelected(block.selection_index === step?.step);
-            }
-        }, [step]);
-        return { selected, setSelected };
-    }
-    scrollToSelected(element) {
-        return () => {
-            if (element !== undefined) {
-                element.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-            }
-        };
-    }
-    scrollOnSelected(ref, setElement) {
-        return (selected) => {
-            if (selected && ref.current) {
-                setElement(ref.current);
-                ref.current.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-            }
-        };
-    }
-    contentContainsSelected(block, selected_index) {
-        let contains = this.selectableContainsSelected(block, selected_index);
-        block.children.forEach((child) => {
-            if (this.containsSelected(child, selected_index)) {
-                contains = true;
-            }
-        });
-        return contains;
-    }
-    ;
-    sectionConstainsSelected(block, selected_index) {
-        let contains = this.selectableContainsSelected(block, selected_index);
-        block.spans.forEach((span) => {
-            if (this.containsSelected(span, selected_index)) {
-                contains = true;
-            }
-        });
-        return contains;
-    }
-    ;
-    selectableContainsSelected(block, selected_index) {
-        if (block.selection_index === null) {
-            return false;
-        }
-        return block.selection_index <= selected_index;
-    }
-    listContainsSelected(block, selected_index) {
-        let contains = false;
-        block.items.forEach((item) => {
-            if (this.containsSelected(item, selected_index)) {
-                contains = true;
-            }
-        });
-        return contains;
-    }
-    containsSelected(block, selected_index) {
-        if (block instanceof List) {
-            return this.listContainsSelected(block, selected_index);
-        }
-        else if (block instanceof Content) {
-            return this.contentContainsSelected(block, selected_index);
-        }
-        else if (block instanceof Section) {
-            return this.sectionConstainsSelected(block, selected_index);
-        }
-        else if (block instanceof Selectable) {
-            return this.selectableContainsSelected(block, selected_index);
-        }
-        return false;
-    }
-    useCollapsed(block) {
-        const { element, setElement } = useContext(SelectedElementContext);
-        const step = this.useStep();
-        const [collapsed, setCollapsed] = useState(block.collapsed);
-        useEffect(() => {
-            if (step != undefined) {
-                setCollapsed(!this.containsSelected(block, step.step));
-            }
-        }, [step]);
-        const toggleCollapsed = useCallback((c) => {
-            setCollapsed(!c);
-            setElement(undefined); // Don't scroll when manually collapsing
-        }, [collapsed]);
-        return { collapsed, toggleCollapsed };
-    }
-    gotoStep = (block) => {
-        const dispatch = useContext(StepDispatchContext);
-        return () => {
-            if (dispatch !== undefined && block.selection_index !== null) {
-                dispatch?.({ type: 'goto', step: block.selection_index });
-            }
-        };
-    };
-    buildNamedContent(block, parent) {
-        const step = this.useStep();
-        const { element, setElement } = useContext(SelectedElementContext);
-        const { selected, setSelected } = this.useSelected(block);
-        const { collapsed, toggleCollapsed } = this.useCollapsed(block);
-        const ref = useRef(null);
-        if (block.classNames.has('prompt-named-content')) {
-            return React.createElement(PromptNamedContentBlock, { ref: ref, className: this.getClassNames(block, step?.step), content: block, collapsed: collapsed, onToggle: toggleCollapsed, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onTransitionEnd: this.scrollToSelected(element), key: block.uuid });
-        }
-        else {
-            return React.createElement(NamedBlock, { ref: ref, className: this.getClassNames(block, step?.step), content: block, collapsed: collapsed, onToggle: toggleCollapsed, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onTransitionEnd: this.scrollToSelected(element), key: block.uuid });
-        }
-    }
-    buildListItem(block, parent) {
-        const step = this.useStep();
-        const { element, setElement } = useContext(SelectedElementContext);
-        const { selected, setSelected } = this.useSelected(block);
-        const { collapsed, toggleCollapsed } = this.useCollapsed(block);
-        const ref = useRef(null);
-        if (block.classNames.has('prompt-tool-named-content')) {
-            return React.createElement(PromptToolListItem, { ref: ref, className: this.getClassNames(block, step?.step), content: block, collapsed: collapsed, onToggle: toggleCollapsed, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onTransitionEnd: this.scrollToSelected(element), key: block.uuid });
-        }
-        else if (block.classNames.has('prompt-named-content')) {
-            return React.createElement(PromptBlockListItem, { ref: ref, className: this.getClassNames(block, step?.step), content: block, collapsed: collapsed, onToggle: toggleCollapsed, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onTransitionEnd: this.scrollToSelected(element), key: block.uuid });
-        }
-        else {
-            return React.createElement(BlockListItem, { ref: ref, className: this.getClassNames(block, step?.step), content: block, collapsed: collapsed, onToggle: toggleCollapsed, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onTransitionEnd: this.scrollToSelected(element), key: block.uuid });
-        }
-    }
-    buildContent(block, parent) {
-        const step = this.useStep();
-        const { element, setElement } = useContext(SelectedElementContext);
-        const { selected, setSelected } = this.useSelected(block);
-        const ref = useRef(null);
-        if (block.classNames.has('tool-response')) {
-            return React.createElement(ToolResponse, { ref: ref, className: this.getClassNames(block, step?.step), content: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-        }
-        else {
-            return React.createElement(ModelResponse, { ref: ref, className: this.getClassNames(block, step?.step), content: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-        }
-    }
-    buildList(block, parent) {
-        const step = this.useStep();
-        useContext(SelectedElementContext);
-        const ref = useRef(null);
-        if (block.classNames.has('prompt-list')) {
-            return React.createElement(PromptBlockList, { ref: ref, className: this.getClassNames(block, step?.step), list: block, selected: false, key: block.uuid });
-        }
-        else {
-            return React.createElement(BlockList, { ref: ref, className: this.getClassNames(block, step?.step), list: block, selected: false, key: block.uuid });
-        }
-    }
-    buildSection(block, parent) {
-        const step = this.useStep();
-        const { element, setElement } = useContext(SelectedElementContext);
-        const { selected, setSelected } = this.useSelected(block);
-        const ref = useRef(null);
-        if (block.classNames.has('prompt-section')) {
-            return React.createElement(PromptContentSection, { ref: ref, className: this.getClassNames(block, step?.step), section: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-        }
-        else {
-            return React.createElement(ContentSection, { ref: ref, className: this.getClassNames(block, step?.step), section: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-        }
-    }
-    buildSpan(block, parent) {
-        const step = this.useStep();
-        const { element, setElement } = useContext(SelectedElementContext);
-        const { selected, setSelected } = this.useSelected(block);
-        const ref = useRef(null);
-        if (block.classNames.has('special-token')) {
-            return React.createElement(SpecialTokenSpan, { ref: ref, className: this.getClassNames(block, step?.step), span: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-        }
-        else if (block.classNames.has('tool-span') || block.classNames.has('tool')) {
-            if (block.classNames.has('prompt-span')) {
-                return React.createElement(PromptToolContentSpan, { ref: ref, className: this.getClassNames(block, step?.step), span: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-            }
-            else {
-                return React.createElement(ToolContentSpan, { ref: ref, className: this.getClassNames(block, step?.step), span: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-            }
-        }
-        else {
-            if (block.classNames.has('prompt-span')) {
-                return React.createElement(PromptContentSpan, { ref: ref, className: this.getClassNames(block, step?.step), span: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-            }
-            else {
-                return React.createElement(ContentSpan, { ref: ref, className: this.getClassNames(block, step?.step), span: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), onClick: this.gotoStep(block), key: block.uuid });
-            }
-        }
-    }
-    buildSentinal(block, parent) {
-        const { element, setElement } = useContext(SelectedElementContext);
-        const { selected, setSelected } = this.useSelected(block);
-        const ref = useRef(null);
-        return React.createElement(SentinalView, { ref: ref, sentinal: block, selected: selected, onSelected: this.scrollOnSelected(ref, setElement), key: block.uuid });
-    }
-}
-
-const ANNOTATION_PATTERN = new RegExp("<mark([^>]*)>(.*?)</mark>", 'gm');
-const ARGS_PATTERN = new RegExp("(\\w+)=\"([^\"]*)\"", 'gm');
-const parseSpanArgs = (args) => {
-    const argMap = new Map();
-    let m;
-    while ((m = ARGS_PATTERN.exec(args)) !== null) {
-        // This is necessary to avoid infinite loops with zero-width matches
-        if (m.index === ARGS_PATTERN.lastIndex) {
-            ARGS_PATTERN.lastIndex++;
-        }
-        argMap.set(m[1], m[2]);
-    }
-    return argMap;
-};
-const buildSpan = (json, content, inPrompt) => {
-    const span = new Span(content);
-    if (inPrompt) {
-        span.classNames.add('prompt-span');
-    }
-    return span;
-};
-const parseSpans = (json, inPrompt) => {
-    const spans = [];
-    if (json['type'] === 'action') {
-        const span = buildSpan(json, json['content'], inPrompt);
-        if (json['step']) {
-            span.selection_index = json['step'];
-        }
-        span.classNames.add('tool-span');
-        spans.push(span);
-        return spans;
-    }
-    let m;
-    let offset = 0;
-    const content = json['content'];
-    while ((m = ANNOTATION_PATTERN.exec(content)) !== null) {
-        // This is necessary to avoid infinite loops with zero-width matches
-        if (m.index === ANNOTATION_PATTERN.lastIndex) {
-            ANNOTATION_PATTERN.lastIndex++;
-        }
-        if (m.index > offset) {
-            const span = new Span(content.substring(offset, m.index));
-            if (inPrompt) {
-                span.classNames.add('prompt-span');
-            }
-            spans.push(span);
-        }
-        const span = buildSpan(json, m[2], inPrompt);
-        const args = parseSpanArgs(m[1]);
-        if (args.has('class')) {
-            // FIXME: Handle multiple classes
-            span.classNames.add(args.get('class'));
-        }
-        if (args.has('step')) {
-            span.selection_index = parseInt(args.get('step'));
-        }
-        spans.push(span);
-        offset = m.index + m[0].length;
-    }
-    if (offset < content.length) {
-        const span = buildSpan(json, content.substring(offset), inPrompt);
-        spans.push(span);
-    }
-    return spans;
-};
-const parseSection = (json, inPrompt) => {
-    const section = new Section();
-    if (json['type']) {
-        if (json['type'] === 'code') {
-            const code = section;
-            if (json['language']) {
-                code.language = json['language'];
-            }
-            return code;
-        }
-        section.classNames.add(json['type']);
-    }
-    if (inPrompt) {
-        section.classNames.add('prompt-section');
-    }
-    if (json['step'] && json['type'] !== 'action') {
-        section.selection_index = json['step'];
-    }
-    let update = {};
-    if (json['label']) {
-        section.name = json['label'];
-    }
-    section.spans = parseSpans({ ...json, ...update }, inPrompt);
-    return section;
-};
-const parseContent = (json) => {
-    const response = new Content();
-    if (json['type']) {
-        response.classNames.add(json['type']);
-    }
-    response.children = json.sections.map((s) => parseSection(s, false));
-    if (json['step']) {
-        response.selection_index = json['step'];
-    }
-    return response;
-};
-const parseNamedContent = (json, inPrompt) => {
-    const response = new NamedContent(json['label']);
-    if (json['type']) {
-        response.classNames.add(json['type']);
-    }
-    if (inPrompt) {
-        response.classNames.add('prompt-named-content');
-    }
-    response.children = json.sections.map((c) => parseSection(c, inPrompt));
-    if (json['step']) {
-        response.selection_index = json['step'];
-    }
-    return response;
-};
-const parsePromptExamples = (json) => {
-    const examples = new List();
-    examples.classNames.add('prompt-list');
-    examples.items = json.examples.map((e) => parseNamedContent(e, true));
-    return examples;
-};
-const parseToolDefinitions = (json) => {
-    const definitions = new List();
-    definitions.classNames.add('prompt-list');
-    definitions.items = json['tools'].map((t) => {
-        const def = parseNamedContent(t, true);
-        def.classNames.add('prompt-tool-named-content');
-        return def;
-    });
-    return definitions;
-};
-const parsePrompt = (json) => {
-    const prompt = new NamedContent(json.label);
-    prompt.classNames.add('prompt-named-content');
-    if (json['type']) {
-        prompt.classNames.add(json['type']);
-    }
-    prompt.children = json.sections.map((s) => {
-        switch (s['type']) {
-            case 'examples':
-                return parsePromptExamples(s);
-            case 'scratchpad':
-                return parseNamedContent(s, true);
-            case 'tools':
-                return parseToolDefinitions(s);
-            case 'text':
-                return parseSection(s, true);
-            default:
-                return parseSection(s, true);
-        }
-    });
-    return prompt;
-};
-const parseSentinal = (json) => {
-    const sentinal = new Selectable();
-    if (json['step']) {
-        sentinal.selection_index = json['step'];
-    }
-    return sentinal;
-};
-const parseToolResponse = (json) => {
-    const response = new Content();
-    if (json['type']) {
-        response.classNames.add(json['type']);
-    }
-    response.children = json['sections'].map(parseSection);
-    if (json['step']) {
-        response.selection_index = json['step'];
-    }
-    return response;
-};
-const parsePromptChain = (json) => {
-    return json.map((m) => {
-        switch (m.type) {
-            case 'tool-response':
-                return parseToolResponse(m);
-            case 'prompt':
-                return parsePrompt(m);
-            case 'response':
-                return parseContent(m);
-            case 'sentinal':
-                return parseSentinal(m);
-            default:
-                throw new Error("Unknown message type: " + m.type);
-        }
-    });
-};
-
-// import '@vscode/codicons/dist/codicon.css';
-const Widget = ({ model }) => {
-    let getData = () => {
-        const json_data = JSON.parse(model.get("data"));
-        return parsePromptChain(json_data);
-    };
-    let getTheme = () => model.get("theme");
-    const [data, setData] = useState(getData());
-    const [theme, setTheme] = useState(getTheme());
-    const [factory, setFactory] = useState(new PaperBlockFactory());
-    const [step, setStep] = useState(1);
-    const [element, setElement] = useState();
-    model.on("change:data", () => {
-        setData(getData());
-    });
-    model.on("change:theme", () => {
-        setTheme(getTheme());
-    });
-    return React.createElement(ThemeProvider, { theme: { 'mode': theme } },
-        React.createElement(StepProvider, { step: step, numSteps: 0, onChange: () => { } },
-            React.createElement(BlockFactoryContext.Provider, { value: { factory, setFactory } },
-                React.createElement(SelectedElementContext.Provider, { value: { element, setElement } },
-                    React.createElement(BlockStream, { blocks: data })))));
-};
-const render = ({ model, el }) => {
-    // shadow DOM as react root
-    const root = createRoot(el);
-    // render react element inside shadow DOM
-    root.render(createElement(Widget, { model: model }));
-};
-
-export { DescriptionBlock, ModelResponse, PaperBlockFactory, PromptBlockList, PromptBlockListItem, PromptContentSection, PromptContentSpan, PromptNamedContentBlock, PromptToolContentSpan, PromptToolListItem, ScrollFlagContext, SelectedElementContext, SelectedStepContext, SpecialTokenSpan, StepContext, StepDispatchContext, StepProvider, StepReducer, StepState, ToolContentSpan, ToolResponse, parseContent, parseNamedContent, parsePrompt, parsePromptChain, parsePromptExamples, parseSection, parseSentinal, parseSpans, parseToolDefinitions, parseToolResponse, promptBgColor, promptBorderColor, promptFont, promptListItemBorderColor, promptTextColor, promptToolBgColor, promptToolTextColor, render, spanTextColor, specialTokenBgColor, specialTokenTextColor, toolBgColor, toolTextColor };
+`;class Re extends b{getClassNames(e,t){const s=[];return e instanceof S&&(null!==e.selection_index&&s.push("selectable"),t===e.selection_index&&s.push("selected")),s}useStep(){return o(J)}useSelected(e){const t=this.useStep(),[s,n]=c(e.selected);return l((()=>{null!=t&&n(e.selection_index===t?.step)}),[t]),{selected:s,setSelected:n}}scrollToSelected(e){return()=>{void 0!==e&&e.scrollIntoView({behavior:"smooth",block:"center"})}}scrollOnSelected(e,t){return s=>{s&&e.current&&(t(e.current),e.current.scrollIntoView({behavior:"smooth",block:"center"}))}}contentContainsSelected(e,t){let s=this.selectableContainsSelected(e,t);return e.children.forEach((e=>{this.containsSelected(e,t)&&(s=!0)})),s}sectionConstainsSelected(e,t){let s=this.selectableContainsSelected(e,t);return e.spans.forEach((e=>{this.containsSelected(e,t)&&(s=!0)})),s}selectableContainsSelected(e,t){return null!==e.selection_index&&e.selection_index<=t}listContainsSelected(e,t){let s=!1;return e.items.forEach((e=>{this.containsSelected(e,t)&&(s=!0)})),s}containsSelected(e,t){return e instanceof k?this.listContainsSelected(e,t):e instanceof N?this.contentContainsSelected(e,t):e instanceof y?this.sectionConstainsSelected(e,t):e instanceof S&&this.selectableContainsSelected(e,t)}useCollapsed(e){const{element:t,setElement:s}=o(L),n=this.useStep(),[r,d]=c(e.collapsed);l((()=>{null!=n&&d(!this.containsSelected(e,n.step))}),[n]);return{collapsed:r,toggleCollapsed:a((e=>{d(!e),s(void 0)}),[r])}}gotoStep=e=>{const t=o(U);return()=>{void 0!==t&&null!==e.selection_index&&t?.({type:"goto",step:e.selection_index})}};buildNamedContent(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),{collapsed:i,toggleCollapsed:m}=this.useCollapsed(t),u=r(null);return t.classNames.has("prompt-named-content")?e.createElement(Q,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:m,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid}):e.createElement(p,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:m,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid})}buildListItem(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),{collapsed:i,toggleCollapsed:p}=this.useCollapsed(t),u=r(null);return t.classNames.has("prompt-tool-named-content")?e.createElement(te,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:p,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid}):t.classNames.has("prompt-named-content")?e.createElement(X,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:p,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid}):e.createElement(m,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:p,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid})}buildContent(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),i=r(null);return t.classNames.has("tool-response")?e.createElement(me,{ref:i,className:this.getClassNames(t,l?.step),content:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(ae,{ref:i,className:this.getClassNames(t,l?.step),content:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid})}buildList(t,s){const l=this.useStep();o(L);const n=r(null);return t.classNames.has("prompt-list")?e.createElement(se,{ref:n,className:this.getClassNames(t,l?.step),list:t,selected:!1,key:t.uuid}):e.createElement(u,{ref:n,className:this.getClassNames(t,l?.step),list:t,selected:!1,key:t.uuid})}buildSection(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),i=r(null);return t instanceof x?e.createElement(le,{ref:i,className:this.getClassNames(t,l?.step),code:t,selected:a,editable:!1,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("prompt-section")?e.createElement(ye,{ref:i,className:this.getClassNames(t,l?.step),section:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(g,{ref:i,className:this.getClassNames(t,l?.step),section:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid})}buildSpan(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),i=r(null);return t.classNames.has("special-token")?e.createElement(Pe,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("tool-span")||t.classNames.has("tool")?t.classNames.has("prompt-span")?e.createElement(Ie,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(Oe,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("prompt-span")?e.createElement($e,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(f,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid})}buildSentinal(t,s){const{element:l,setElement:n}=o(L),{selected:c,setSelected:a}=this.useSelected(t),d=r(null);return e.createElement(C,{ref:d,sentinal:t,selected:c,onSelected:this.scrollOnSelected(d,n),key:t.uuid})}}const Ae=new RegExp("<mark([^>]*)>(.*?)</mark>","gm"),Le=new RegExp('(\\w+)="([^"]*)"',"gm"),Ve=e=>{const t=new Map;let s;for(;null!==(s=Le.exec(e));)s.index===Le.lastIndex&&Le.lastIndex++,t.set(s[1],s[2]);return t},je=(e,t,s)=>{const l=new E(t);return s&&l.classNames.add("prompt-span"),l},Fe=(e,t)=>{const s=[];if("action"===e.type){const l=je(0,e.content,t);return e.step&&(l.selection_index=e.step),l.classNames.add("tool-span"),s.push(l),s}let l,n=0;const o=e.content;for(;null!==(l=Ae.exec(o));){if(l.index===Ae.lastIndex&&Ae.lastIndex++,l.index>n){const e=new E(o.substring(n,l.index));t&&e.classNames.add("prompt-span"),s.push(e)}const e=je(0,l[2],t),c=Ve(l[1]);c.has("class")&&e.classNames.add(c.get("class")),c.has("step")&&(e.selection_index=parseInt(c.get("step"))),s.push(e),n=l.index+l[0].length}if(n<o.length){const e=je(0,o.substring(n),t);s.push(e)}return s},Je=(e,t)=>{let s=new y;e.type&&s.classNames.add(e.type),t&&s.classNames.add("prompt-section"),e.step&&"action"!==e.type&&(s.selection_index=e.step);if(e.label&&(s.name=e.label),s.spans=Fe({...e},t),e.type&&"code"===e.type){const t=s;return e.language&&(t.language=e.language),t}return s},Ue=e=>{const t=new N;return e.type&&t.classNames.add(e.type),t.children=e.sections.map((e=>Je(e,!1))),e.step&&(t.selection_index=e.step),t},qe=(e,t)=>{const s=new $(e.label);return e.type&&s.classNames.add(e.type),t&&s.classNames.add("prompt-named-content"),s.children=e.sections.map((e=>Je(e,t))),e.step&&(s.selection_index=e.step),s},Be=e=>{const t=new k;return t.classNames.add("prompt-list"),t.items=e.examples.map((e=>qe(e,!0))),t},De=e=>{const t=new k;return t.classNames.add("prompt-list"),t.items=e.tools.map((e=>{const t=qe(e,!0);return t.classNames.add("prompt-tool-named-content"),t})),t},Ge=e=>{const t=new $(e.label);return t.classNames.add("prompt-named-content"),e.type&&t.classNames.add(e.type),t.children=e.sections.map((e=>{switch(e.type){case"examples":return Be(e);case"scratchpad":return qe(e,!0);case"tools":return De(e);default:return Je(e,!0)}})),t},He=e=>{const t=new S;return e.step&&(t.selection_index=e.step),t},Ke=e=>{const t=new N;return e.type&&t.classNames.add(e.type),t.children=e.sections.map(Je),e.step&&(t.selection_index=e.step),t},Qe=e=>e.map((e=>{switch(e.type){case"tool-response":return Ke(e);case"prompt":return Ge(e);case"response":return Ue(e);case"sentinal":return He(e);default:throw new Error("Unknown message type: "+e.type)}})),We=({model:t})=>{let s=()=>{const e=JSON.parse(t.get("data"));return Qe(e)},l=()=>t.get("theme");const[n,o]=c(s()),[a,r]=c(l()),[d,i]=c(new Re),[p,m]=c(1),[u,h]=c();return t.on("change:data",(()=>{o(s())})),t.on("change:theme",(()=>{r(l())})),e.createElement(I,{theme:{mode:a}},e.createElement(q,{step:p,numSteps:0,onChange:()=>{}},e.createElement(w.Provider,{value:{factory:d,setFactory:i}},e.createElement(L.Provider,{value:{element:u,setElement:h}},e.createElement(v,{blocks:n})))))},Xe=({model:e,el:t})=>{O(t).render(d(We,{model:e}))};export{ke as DescriptionBlock,ae as ModelResponse,Re as PaperBlockFactory,se as PromptBlockList,X as PromptBlockListItem,ye as PromptContentSection,$e as PromptContentSpan,Q as PromptNamedContentBlock,Ie as PromptToolContentSpan,te as PromptToolListItem,V as ScrollFlagContext,L as SelectedElementContext,A as SelectedStepContext,Pe as SpecialTokenSpan,J as StepContext,U as StepDispatchContext,q as StepProvider,F as StepReducer,j as StepState,Oe as ToolContentSpan,me as ToolResponse,Ue as parseContent,qe as parseNamedContent,Ge as parsePrompt,Qe as parsePromptChain,Be as parsePromptExamples,Je as parseSection,He as parseSentinal,Fe as parseSpans,De as parseToolDefinitions,Ke as parseToolResponse,G as promptBgColor,H as promptBorderColor,K as promptFont,W as promptListItemBorderColor,B as promptTextColor,_e as promptToolBgColor,Te as promptToolTextColor,Xe as render,xe as spanTextColor,ze as specialTokenBgColor,Me as specialTokenTextColor,ve as toolBgColor,we as toolTextColor};
