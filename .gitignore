@@ -3,3 +3,4 @@
 .venv
 .pytest_cache
 python/build
+*.egg-info

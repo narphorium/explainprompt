@@ -2,8 +2,7 @@
   "name": "explainprompt",
   "version": "0.0.1",
   "description": "A set of building blocks for building tools for thought powered by AI.",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/library.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist/**/*"
@@ -11,7 +10,7 @@
   "jsx": "react-jsx",
   "scripts": {
     "build:clean": "rimraf dist",
-    "build": "rollup -c --bundleConfigAsCjs && cp dist/index.esm.js ../python/explainprompt/jupyter/explainprompt.js",
+    "build": "rollup -c --bundleConfigAsCjs && cp dist/widget.js ../python/explainprompt/jupyter/explainprompt.js",
     "prepare": "relative-deps"
   },
   "repository": {
@@ -27,6 +26,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/react": "^18.2.20",
@@ -40,17 +40,16 @@
     "relative-deps": "^1.0.7",
     "rimraf": "^5.0.1",
     "rollup": "^3.28.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.6.1",
     "typescript": "^5.1.6"
   },
-  "dependencies": {
-    "@rollup/plugin-replace": "^5.0.2",
+  "peerDependencies": {
     "ai-construction-set": "github:narphorium/ai-construction-set",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rollup-plugin-node-polyfills": "^0.2.1",
     "styled-components": "^6.0.7",
     "styled-theming": "^2.2.0"
   }
