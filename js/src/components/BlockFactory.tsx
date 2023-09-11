@@ -1,7 +1,8 @@
-import { Base, BlockList, BlockListItem, Content, ContentSection, ContentSpan, DefaultBlockFactory, List, NamedBlock, NamedContent, Section, Selectable, SentinalView, Span } from 'ai-construction-set';
+import { Base, BlockList, BlockListItem, Code, Content, ContentSection, ContentSpan, DefaultBlockFactory, List, NamedBlock, NamedContent, Section, Selectable, SentinalView, Span } from 'ai-construction-set';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { SelectedElementContext, StepContext, StepDispatchContext } from '../StepContext';
 import { PromptBlockList } from './BlockList';
+import { CodeSection } from './CodeSection';
 import { ModelResponse, ToolResponse } from './ContentBlock';
 import { PromptContentSection } from './ContentSection';
 import { PromptContentSpan, PromptToolContentSpan, SpecialTokenSpan, ToolContentSpan } from './ContentSpan';
@@ -252,22 +253,33 @@ export class PaperBlockFactory extends DefaultBlockFactory {
         const {element, setElement} = useContext(SelectedElementContext);
         const {selected, setSelected} = this.useSelected(block);
         const ref = useRef<HTMLDivElement>(null);
-        if (block.classNames.has('prompt-section')) {
-            return <PromptContentSection ref={ref}
-                className={this.getClassNames(block, step?.step)} 
-                section={block} 
-                selected={selected} 
-                onSelected={this.scrollOnSelected(ref, setElement)} 
-                onClick={this.gotoStep(block)} 
-                key={block.uuid} />;
+        if (block.classNames.has('code')) {
+            return <CodeSection ref={ref}
+                    className={this.getClassNames(block, step?.step)}
+                    code={block as Code}
+                    selected={selected} 
+                    editable={false}
+                    onSelected={this.scrollOnSelected(ref, setElement)} 
+                    onClick={this.gotoStep(block)} 
+                    key={block.uuid} />;
         } else {
-            return <ContentSection ref={ref}
-                className={this.getClassNames(block, step?.step)}
-                section={block} 
-                selected={selected} 
-                onSelected={this.scrollOnSelected(ref, setElement)} 
-                onClick={this.gotoStep(block)} 
-                key={block.uuid} />;
+            if (block.classNames.has('prompt-section')) {
+                return <PromptContentSection ref={ref}
+                    className={this.getClassNames(block, step?.step)} 
+                    section={block} 
+                    selected={selected} 
+                    onSelected={this.scrollOnSelected(ref, setElement)} 
+                    onClick={this.gotoStep(block)} 
+                    key={block.uuid} />;
+            } else {
+                return <ContentSection ref={ref}
+                    className={this.getClassNames(block, step?.step)}
+                    section={block} 
+                    selected={selected} 
+                    onSelected={this.scrollOnSelected(ref, setElement)} 
+                    onClick={this.gotoStep(block)} 
+                    key={block.uuid} />;
+            }
         }
     }
 

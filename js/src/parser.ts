@@ -71,15 +71,15 @@ export const parseSpans = (json: any, inPrompt: boolean): Span[] => {
 }
 
 export const parseSection = (json: any, inPrompt: boolean): Section => {
-    const section = new Section();
+    let section = new Section();
     
     if (json['type']) {
         if (json['type'] === 'code') {
+            section = new Code();
             const code = section as Code;
             if (json['language']) {
                 code.language = json['language'];
             }
-            return code;
         }
         section.classNames.add(json['type']);
     }
