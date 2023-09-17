@@ -1,7 +1,8 @@
-import { Base, BlockList, BlockListItem, Code, Content, ContentSection, ContentSpan, DefaultBlockFactory, List, NamedBlock, NamedContent, Section, Selectable, SentinalView, Span } from 'ai-construction-set';
+import { Base, BlockList, BlockListItem, Code, Content, ContentSection, ContentSpan, DefaultBlockFactory, List, NamedBlock, NamedContent, Section, Selectable, SentinalView, Span, Stream } from 'ai-construction-set';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { SelectedElementContext, StepContext, StepDispatchContext } from '../StepContext';
 import { PromptBlockList } from './BlockList';
+import { BlockStream } from './BlockStream';
 import { CodeSection } from './CodeSection';
 import { ModelResponse, ToolResponse } from './ContentBlock';
 import { PromptContentSection } from './ContentSection';
@@ -61,54 +62,58 @@ export class PaperBlockFactory extends DefaultBlockFactory {
         }
     }
 
-    contentContainsSelected(block: Content, selected_index: number): boolean {
-        let contains = this.selectableContainsSelected(block, selected_index);
+    getContentSelectedChildren(block: Content, selected_index: number): Base[] {
+        let selected = this.getSelectableSelectedChildren(block, selected_index);
         block.children.forEach((child: Base) => {
-            if (this.containsSelected(child, selected_index)) {
-                contains = true;
-            }
+            selected = selected.concat(this.getSelectedChildren(child, selected_index));
         });
-        return contains;
+        return selected;
     };
 
-    sectionConstainsSelected(block: Section, selected_index: number): boolean {
-        let contains = this.selectableContainsSelected(block, selected_index);
+    getSectionSelectedChildren(block: Section, selected_index: number): Base[] {
+        let selected = this.getSelectableSelectedChildren(block, selected_index);
         block.spans.forEach((span: Span) => {
-            if (this.containsSelected(span, selected_index)) {
-                contains = true;
-            }
+            selected = selected.concat(this.getSelectedChildren(span, selected_index));
         });
-        return contains;
+        return selected;
     };
 
-    selectableContainsSelected(block: Selectable, selected_index: number): boolean {
-        if (block.selection_index === null) {
-            return false;
+    getSelectableSelectedChildren(block: Selectable, selected_index: number): Base[] {
+        if (block.selection_index && block.selection_index <= selected_index) {
+            return [block];
         }
-        return block.selection_index <= selected_index;
+        return [];
     }
 
-    listContainsSelected(block: List, selected_index: number): boolean {
-        let contains = false;
+    getListSelectedChildren(block: List, selected_index: number): Base[] {
+        let selected: Base[] = [];
         block.items.forEach((item: NamedContent) => {
-            if (this.containsSelected(item, selected_index)) {
-                contains = true;
-            }
+            selected = selected.concat(this.getSelectedChildren(item, selected_index));
         });
-        return contains;
+        return selected;
     }
 
-    containsSelected(block: Base, selected_index: number): boolean {
+    getStreamSelectedChildren(block: Stream, selected_index: number): Base[] {
+        let selected: Base[] = [];
+        block.blocks.forEach((item: Base) => {
+            selected = selected.concat(this.getSelectedChildren(item, selected_index));
+        });
+        return selected;
+    }
+
+    getSelectedChildren(block: Base, selected_index: number): Base[] {
         if (block instanceof List) {
-            return this.listContainsSelected(block, selected_index);
+            return this.getListSelectedChildren(block, selected_index);
         } else if (block instanceof Content) {
-            return this.contentContainsSelected(block, selected_index);
+            return this.getContentSelectedChildren(block, selected_index);
         } else if (block instanceof Section) {
-            return this.sectionConstainsSelected(block, selected_index);
+            return this.getSectionSelectedChildren(block, selected_index);
         } else if (block instanceof Selectable) {
-            return this.selectableContainsSelected(block, selected_index);
+            return this.getSelectableSelectedChildren(block, selected_index);
+        } else if (block instanceof Stream) {
+            return this.getStreamSelectedChildren(block, selected_index);
         }
-        return false;
+        return [];
     }
 
     useCollapsed(block: NamedContent) {
@@ -117,7 +122,7 @@ export class PaperBlockFactory extends DefaultBlockFactory {
         const [collapsed, setCollapsed] = useState<boolean>(block.collapsed);
         useEffect(() => {
             if (step != undefined) {
-                setCollapsed(!this.containsSelected(block, step.step));
+                setCollapsed(this.getSelectedChildren(block, step.step).length === 0);
             }
         }, [step]);
         const toggleCollapsed = useCallback((c: boolean) => {
@@ -342,5 +347,30 @@ export class PaperBlockFactory extends DefaultBlockFactory {
             selected={selected} 
             onSelected={this.scrollOnSelected(ref, setElement)} 
             key={block.uuid} />;
+    }
+
+    buildStream(stream: Stream, parent?: Base): JSX.Element {
+        const step = this.useStep();
+        const [page, setPage] = useState<number>(1);
+        const ref = useRef<HTMLDivElement>(null);
+
+        // Automatically turn to the selected page
+        useEffect(() => {
+            if (step != undefined) {
+                if (this.getSelectedChildren(stream, step.step)) {
+                    stream.blocks.forEach((block) => {
+                        if (block.iteration && this.getSelectedChildren(block, step.step)) {
+                            setPage(block.iteration);
+                        }
+                    });
+                }
+            }
+        }, [step]);
+        
+        return <BlockStream ref={ref} 
+            stream={stream}
+            page={page}
+            setPage={setPage}
+            key={stream.uuid} />;
     }
 }

@@ -1,7 +1,9 @@
-import { Base, Code, Content, List, NamedContent, Section, Selectable, Span } from 'ai-construction-set';
+import { Code, Content, List, NamedContent, Section, Selectable, Span, Stream } from 'ai-construction-set';
 
 const ANNOTATION_PATTERN = new RegExp("<mark([^>]*)>(.*?)</mark>", 'gm');
 const ARGS_PATTERN = new RegExp("(\\w+)=\"([^\"]*)\"", 'gm');
+
+type JsonData = { [name: string]: any };
 
 const parseSpanArgs = (args: string): Map<string, string> => {
     const argMap = new Map<string, string>();
@@ -16,7 +18,7 @@ const parseSpanArgs = (args: string): Map<string, string> => {
     return argMap;
 }
 
-const buildSpan = (json: any, content: string, inPrompt: boolean): Span => {
+const buildSpan = (json: JsonData, content: string, inPrompt: boolean): Span => {
     const span = new Span(content);
     if (inPrompt) {
         span.classNames.add('prompt-span');
@@ -25,7 +27,7 @@ const buildSpan = (json: any, content: string, inPrompt: boolean): Span => {
 };
 
 
-export const parseSpans = (json: any, inPrompt: boolean): Span[] => {
+export const parseSpans = (json: JsonData, inPrompt: boolean): Span[] => {
     const spans: Span[] = [];
     if (json['type'] === 'action') {
         const span = buildSpan(json, json['content'], inPrompt);
@@ -70,7 +72,7 @@ export const parseSpans = (json: any, inPrompt: boolean): Span[] => {
     return spans;
 }
 
-export const parseSection = (json: any, inPrompt: boolean): Section => {
+export const parseSection = (json: JsonData, inPrompt: boolean): Section => {
     let section = new Section();
     
     if (json['type']) {
@@ -92,12 +94,12 @@ export const parseSection = (json: any, inPrompt: boolean): Section => {
     let update = {};
     if (json['label']) {
         section.name = json['label'];
-    }    
+    }
     section.spans = parseSpans({...json, ...update}, inPrompt);
     return section;
 }
 
-export const parseContent = (json: any): Content => {
+export const parseContent = (json: JsonData): Content => {
     const response = new Content();
     if (json['type']) {
         response.classNames.add(json['type']);
@@ -106,10 +108,13 @@ export const parseContent = (json: any): Content => {
     if (json['step']) {
         response.selection_index = json['step'];
     }
+    if (json['iteration']) {
+        response.iteration = json['iteration'];
+    }
     return response;
 }
 
-export const parseNamedContent = (json: any, inPrompt: boolean): NamedContent => {
+export const parseNamedContent = (json: JsonData, inPrompt: boolean): NamedContent => {
     const response = new NamedContent(json['label']);
     if (json['type']) {
         response.classNames.add(json['type']);
@@ -121,17 +126,20 @@ export const parseNamedContent = (json: any, inPrompt: boolean): NamedContent =>
     if (json['step']) {
         response.selection_index = json['step'];
     }
+    if (json['iteration']) {
+        response.iteration = json['iteration'];
+    }
     return response;
 }
 
-export const parsePromptExamples = (json: any): List => {
+export const parsePromptExamples = (json: JsonData): List => {
     const examples = new List();
     examples.classNames.add('prompt-list');
     examples.items = json.examples.map((e: any) => parseNamedContent(e, true));
     return examples;
 }
 
-export const parseToolDefinitions = (json: any): List => {
+export const parseToolDefinitions = (json: JsonData): List => {
     const definitions = new List();
     definitions.classNames.add('prompt-list');
     definitions.items = json['tools'].map((t: any) => {
@@ -142,11 +150,14 @@ export const parseToolDefinitions = (json: any): List => {
     return definitions;
 }
 
-export const parsePrompt = (json: any): NamedContent => {
+export const parsePrompt = (json: JsonData): NamedContent => {
     const prompt = new NamedContent(json.label);
     prompt.classNames.add('prompt-named-content');
     if (json['type']) {
         prompt.classNames.add(json['type']);
+    }
+    if (json['iteration']) {
+        prompt.iteration = json['iteration'];
     }
     prompt.children = json.sections.map((s: any) => {
         switch (s['type']) {
@@ -165,15 +176,18 @@ export const parsePrompt = (json: any): NamedContent => {
     return prompt;
 }
 
-export const parseSentinal = (json: any): Selectable => {
+export const parseSentinal = (json: JsonData): Selectable => {
     const sentinal = new Selectable();
     if (json['step']) {
         sentinal.selection_index = json['step'];
     }
+    if (json['iteration']) {
+        sentinal.iteration = json['iteration'];
+    }
     return sentinal
 }
 
-export const parseToolResponse = (json: any): Content => {
+export const parseToolResponse = (json: JsonData): Content => {
     const response = new Content();
     if (json['type']) {
         response.classNames.add(json['type']);
@@ -182,22 +196,68 @@ export const parseToolResponse = (json: any): Content => {
     if (json['step']) {
         response.selection_index = json['step'];
     }
+    if (json['iteration']) {
+        response.iteration = json['iteration'];
+    }
     return response;
 }
 
-export const parsePromptChain = (json: any[]): Base[] => {
-    return json.map((m: any) => {
+const buildStream = (data: JsonData) => {
+    const stream = new Stream();
+    if (data['name']) {
+        stream.name = data['name'];
+    }
+    stream.blocks = data['blocks'];
+    return stream;
+};
+
+export const parsePromptChain = (json: JsonData, id = "1"): Stream => {
+    let current_data: JsonData[] = [{'id': id, 'blocks':[]}];
+    let current_current_data = current_data[current_data.length - 1];
+
+    if (json['label']) {
+        current_current_data['name'] = json['label'];
+    }
+
+    json['trajectory'].map((m: any) => {
+        current_current_data = current_data[current_data.length - 1];
+        if (current_data.length > 1 && m['chain']['id'] === current_data[current_data.length - 2]['id']) {
+            // If we're going back up the chain, pop the current data
+            const tmp = current_data.pop();
+            current_current_data = current_data[current_data.length - 1];
+            if (tmp && tmp['blocks'].length > 0) {
+                // If there's anything in the popped data, push it to the current data
+                current_current_data['blocks'].push(buildStream(tmp));
+            }
+        } else if (m['chain']['id'] !== current_current_data['id']) {
+            // If we're going down the chain, push the current data
+            
+            const new_data: JsonData = {'id': m['chain']['id'], 'blocks':[]};
+            if (m['label']) {
+                new_data['name'] = m['label'];
+            }
+
+            current_data.push(new_data);
+            current_current_data = current_data[current_data.length - 1];
+        }
+
         switch (m.type) {
             case 'tool-response':
-                return parseToolResponse(m);
+                current_current_data['blocks'].push(parseToolResponse(m));
+                break;
             case 'prompt':
-                return parsePrompt(m);
+                current_current_data['blocks'].push(parsePrompt(m));
+                break;
             case 'response':
-                return parseContent(m);
+                current_current_data['blocks'].push(parseContent(m));
+                break;
             case 'sentinal':
-                return parseSentinal(m);
+                current_current_data['blocks'].push(parseSentinal(m));
+                break;
             default:
                 throw new Error("Unknown message type: " + m.type);
         }
     });
+
+    return buildStream(current_current_data);
 }

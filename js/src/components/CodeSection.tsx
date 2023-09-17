@@ -74,7 +74,7 @@ const CodeSectionComponent = forwardRef((
 
 export const CodeSection = styled(CodeSectionComponent)`
   background-color: #303030;
-  font-size: 10pt;
+  font-size: 9.5pt;
   padding: 4px;
   border-radius: 4px;
 `;

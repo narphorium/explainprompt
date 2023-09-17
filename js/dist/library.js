@@ -1,24 +1,24 @@
-import e,{createContext as t,useReducer as s,useEffect as l,forwardRef as n,useContext as o,useState as c,useCallback as a,useRef as r,createElement as d}from"react";import{selectedVariants as i,NamedBlock as p,BlockListItem as m,BlockList as u,ContentBlock as h,ContentSection as g,ContentSpan as f,DefaultBlockFactory as b,Selectable as S,List as k,Content as N,Section as x,SentinalView as y,Span as C,Code as E,NamedContent as $,BlockFactoryContext as w,BlockStream as v}from"ai-construction-set";import{createRoot as O}from"react-dom/client";import T,{styled as _,ThemeProvider as I}from"styled-components";import M from"styled-theming";import{python as z}from"@codemirror/lang-python";import{vscodeDark as P}from"@uiw/codemirror-theme-vscode";import R from"@uiw/react-codemirror";const A=t({step:1,setStep:e=>{}}),L=t({element:void 0,setElement:e=>{}}),V=t({flag:!1,toggle:()=>{}});class j{step=1;numSteps=1}const F=(e,t)=>{switch(t.type){case"start":return{step:1,numSteps:e.numSteps};case"end":return{step:Math.max(1,e.numSteps),numSteps:e.numSteps};case"previous":return{step:Math.max(1,e.step-1),numSteps:e.numSteps};case"next":return{step:Math.min(e.numSteps,e.step+1),numSteps:e.numSteps};case"goto":return{step:Math.min(e.numSteps,Math.max(1,t.step)),numSteps:e.numSteps};default:throw new Error("Invalid action")}},J=t(null),U=t(null),q=({step:t,numSteps:n,onChange:o,children:c})=>{const[a,r]=s(F,{step:t,numSteps:n});return l((()=>{o&&o(a)}),[a]),e.createElement(J.Provider,{value:a},e.createElement(U.Provider,{value:r},c))},B=i("mode",{default:{light:"#666",dark:"#bbb"},selected:{light:"#222",dark:"#ffde98"}}),D=M("mode",{light:"#222",dark:"#ffde98"}),G=i("mode",{default:{light:"transparent",dark:"transparent"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),H=i("mode",{default:{light:"#ccc",dark:"#595b60"},selected:{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}}),K='"Roboto Mono", monospace',Q=T(p)`
-    color: ${B};
-    background-color: ${G};
-    border-color: ${H};
+import e,{createContext as t,useReducer as s,useEffect as l,forwardRef as a,useContext as n,useState as o,useCallback as c,useRef as r,createElement as i}from"react";import{selectedVariants as d,NamedBlock as m,BlockListItem as p,BlockList as u,BlockFactoryContext as h,ContentBlock as g,ContentSection as b,ContentSpan as f,DefaultBlockFactory as k,Selectable as S,List as N,Content as E,Section as C,Stream as x,SentinalView as y,Span as $,Code as v,NamedContent as w}from"ai-construction-set";import{createRoot as _}from"react-dom/client";import O,{styled as T,ThemeProvider as P}from"styled-components";import I from"styled-theming";import{python as z}from"@codemirror/lang-python";import{vscodeDark as A}from"@uiw/codemirror-theme-vscode";import M from"@uiw/react-codemirror";const j=t({step:1,setStep:e=>{}}),L=t({element:void 0,setElement:e=>{}}),R=t({flag:!1,toggle:()=>{}});class F{step=1;numSteps=1}const J=(e,t)=>{switch(t.type){case"start":return{step:1,numSteps:e.numSteps};case"end":return{step:Math.max(1,e.numSteps),numSteps:e.numSteps};case"previous":return{step:Math.max(1,e.step-1),numSteps:e.numSteps};case"next":return{step:Math.min(e.numSteps,e.step+1),numSteps:e.numSteps};case"goto":return{step:Math.min(e.numSteps,Math.max(1,t.step)),numSteps:e.numSteps};default:throw new Error("Invalid action")}},V=t(null),H=t(null),U=({step:t,numSteps:a,onChange:n,children:o})=>{const[c,r]=s(J,{step:t,numSteps:a});return l((()=>{n&&n(c)}),[c]),e.createElement(V.Provider,{value:c},e.createElement(H.Provider,{value:r},o))},q=d("mode",{default:{light:"#666",dark:"#bbb"},selected:{light:"#222",dark:"#ffde98"}}),B=I("mode",{light:"#222",dark:"#ffde98"}),D=d("mode",{default:{light:"transparent",dark:"transparent"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),G=d("mode",{default:{light:"#ccc",dark:"#595b60"},selected:{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}}),K='"Roboto Mono", monospace',Q=O(m)`
+    color: ${q};
+    background-color: ${D};
+    border-color: ${G};
     font-family: ${K};
 
     & .aics-collapsible-block-title {
-        color: ${B};
+        color: ${q};
     }
 
     &.selected .aics-collapsible-block-title {
-        color: ${D};
-    }
-
-    & .aics-collapsible-block-control {
         color: ${B};
     }
-`,W=M("mode",{light:"#ccc",dark:"#595b60"}),X=T(m)`
+
+    & .aics-collapsible-block-control svg path {
+        fill: ${q};
+    }
+`,W=I("mode",{light:"#ccc",dark:"#595b60"}),X=O(p)`
     border-color: ${W};
-    background-color: ${G};
-`,Y=i("mode",{default:{light:"#222",dark:"#b3d7f8"},selected:{light:"#222",dark:"#bcdefe"}}),Z=i("mode",{default:{light:"transparent",dark:"transparent"},selected:{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}}),ee=M("mode",{light:"#222",dark:"#bcdefe"}),te=T(X)`
+    background-color: ${D};
+`,Y=d("mode",{default:{light:"#222",dark:"#b3d7f8"},selected:{light:"#222",dark:"#bcdefe"}}),Z=d("mode",{default:{light:"transparent",dark:"transparent"},selected:{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}}),ee=I("mode",{light:"#222",dark:"#bcdefe"}),te=O(X)`
     color: ${Y};
     background-color: ${Z};
 
@@ -26,78 +26,143 @@ import e,{createContext as t,useReducer as s,useEffect as l,forwardRef as n,useC
     &.selected .aics-content-section > span > label {
         color: ${ee} !important;
     }
-`,se=T(u)`
-    background-color: ${G};
-    border-color: ${H};
-    color: ${B};
-`,le=_(n((({className:t,code:s,extensions:l,selected:n,onSelected:o,onClick:c,onChange:a,editable:r,key:d},i)=>{let p="";s.spans.forEach((e=>{p+=e.content}));let m=[];return void 0!==l&&(m=m.concat(l)),m.push(z()),e.createElement("div",{ref:i,className:(()=>{let e=["aics-code-section"];return t&&("string"==typeof t?e.push(t):Array.isArray(t)&&(e=e.concat(t))),n&&e.push("selected"),e.join(" ")})(),onClick:e=>{void 0!==c&&c(e)}},e.createElement(R,{value:p,basicSetup:!1,theme:P,editable:r,extensions:m,onChange:(e,t)=>{void 0!==a&&a(e,t)}}))})))`
+`,se=O(u)`
+    background-color: ${D};
+    border-color: ${G};
+    color: ${q};
+`,le=I("mode",{light:"#e3e3e3",dark:"rgba(255 255 255 / 7%)"}),ae=I("mode",{light:"#6e7071",dark:"#bbbec9"}),ne=I("mode",{light:"#ccc",dark:"rgba(255 255 255 / 20%)"}),oe=I("mode",{light:"#a6a6ab",dark:"rgba(255 255 255 / 30%)"}),ce=T((({className:t,page:s,numPages:l,showEnds:a,setPage:n})=>{const[o,c]=e.useState(""),[r,i]=e.useState(""),[d,m]=e.useState(""),[p,u]=e.useState(""),h=()=>{let e=["aics-pagination"];return t&&("string"==typeof t?e.push(t):Array.isArray(t)&&(e=e.concat(t))),e.join(" ")},g=(e,t)=>{t("pulse1"),setTimeout((()=>{t("")}),400)},b=e.useCallback((e=>{n(e)}),[s,n]),f=e.useCallback((()=>{b(1),g(0,c)}),[s,n]),k=e.useCallback((()=>{b(l),g(0,u)}),[s,n]),S=e.useCallback((()=>{b(s-1),g(0,i)}),[s,n]),N=e.useCallback((()=>{b(s+1),g(0,m)}),[s,n]);return!0===a?e.createElement("div",{className:h()},e.createElement("button",{className:"button-start "+o,title:"Return to start [home]",onClick:f},e.createElement("span",{className:"material-icons material-icons-outlined"},"first_page")),e.createElement("button",{className:"button-end "+r,title:"Previous step [←]",onClick:S},e.createElement("span",{className:"material-icons material-icons-outlined"},"chevron_left")),e.createElement("span",{className:"page"},s," of ",l),e.createElement("button",{className:"button-start "+d,title:"Next step [→]",onClick:N},e.createElement("span",{className:"material-icons material-icons-outlined"},"chevron_right")),e.createElement("button",{className:"button-end "+p,title:"Jump to end [end]",onClick:k},e.createElement("span",{className:"material-icons material-icons-outlined"},"last_page"))):e.createElement("div",{className:h()},e.createElement("button",{className:"button-start button-end "+r,title:"Previous step [←]",onClick:S},e.createElement("span",{className:"material-icons material-icons-outlined"},"chevron_left")),e.createElement("span",{className:"page"},s," of ",l),e.createElement("button",{className:"button-start button-end "+d,title:"Next step [→]",onClick:N},e.createElement("span",{className:"material-icons material-icons-outlined"},"chevron_right")))}))`
+    text-align: left;
+
+    .page {
+        vertical-align: top;
+        line-height: 22px;
+        margin: 0 8px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+    }
+      
+    button {
+        border: 0;
+        background-color: ${le};
+        border-radius: 8px;
+        color: ${ae};
+        margin: 0 1px;
+        padding: 0 2px;
+        height: 22px;
+
+        span {
+            font-size: 18px;
+            margin: 1px 0;
+        }
+    }
+
+    button.button-start {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    button.button-end {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+      
+    button:hover {
+        background-color: ${ne};
+    }
+      
+    button:focus {
+        outline: 0;
+    }
+
+    button.pulse1 {
+        animation-name: pulse1;
+        animation-duration: 0.2s;
+        animation-iteration-count: 1;
+        animation-direction: alternate-reverse;
+        animation-timing-function: ease;
+    }
+      
+    @keyframes pulse1 {
+        0% {}
+        50% {
+          background-color: ${oe};
+        }
+        100% {}
+    }
+`,re=a((({className:t,stream:s,page:l,setPage:a},o)=>{const{factory:c,setFactory:r}=n(h);let i=1;s.blocks.forEach((e=>{void 0!==e.iteration&&e.iteration>i&&(i=e.iteration)}));const d=()=>{let e=["aics-block-stream"];return t&&("string"==typeof t?e.push(t):Array.isArray(t)&&(e=e.concat(t))),e.join(" ")};return i>1?e.createElement("div",{ref:o,className:d()},e.createElement("label",{className:"aics-block-stream-page-label"},s.name),e.createElement(ce,{page:l,numPages:i,setPage:a}),e.createElement("div",{className:"aics-block-stream-content"},s.blocks.filter((e=>e.iteration===l)).map(((e,t)=>c?.build(e))))):e.createElement("div",{ref:o,className:d()},e.createElement("div",{className:"aics-block-stream-content"},s.blocks.map(((e,t)=>c?.build(e)))))})),ie=O(re)`
+margin-top: 4px;
+
+.aics-block-stream .aics-block-stream-content {
+    margin-left: 24px;
+}
+`,de=T(a((({className:t,code:s,extensions:l,selected:a,onSelected:n,onClick:o,onChange:c,editable:r,key:i},d)=>{let m="";s.spans.forEach((e=>{m+=e.content}));let p=[];return void 0!==l&&(p=p.concat(l)),p.push(z()),e.createElement("div",{ref:d,className:(()=>{let e=["aics-code-section"];return t&&("string"==typeof t?e.push(t):Array.isArray(t)&&(e=e.concat(t))),a&&e.push("selected"),e.join(" ")})(),onClick:e=>{void 0!==o&&o(e)}},e.createElement(M,{value:m,basicSetup:!1,theme:A,editable:r,extensions:p,onChange:(e,t)=>{void 0!==c&&c(e,t)}}))})))`
   background-color: #303030;
-  font-size: 10pt;
+  font-size: 9.5pt;
   padding: 4px;
   border-radius: 4px;
-`,ne=i("mode",{default:{light:"#222",dark:"#292b2f"},selected:{light:"#222",dark:"#ffde98"}}),oe=i("mode",{default:{light:"white",dark:"#292b2f"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),ce=i("mode",{default:{light:"#ccc",dark:"#595b60"},selected:{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}}),ae=T(h)`
-    color: ${ne};
-    background-color: ${oe};
-    border-color: ${ce};
-`,re=i("mode",{default:{light:"#222",dark:"#b3d7f8"},selected:{light:"#222",dark:"#bcdefe"}}),de=i("mode",{default:{light:"rgb(242 249 255)",dark:"#292b2f"},selected:{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}}),ie=i("mode",{default:{light:"#b4d9ff",dark:"#4a5f79"},selected:{light:"#a0c1e3",dark:"#4a5f79"}}),pe=M("mode",{light:"#222",dark:"#bcdefe"}),me=T(h)`
-    color: ${re};
-    background-color: ${de};
-    border-color: ${ie};
+`,me=d("mode",{default:{light:"#222",dark:"#292b2f"},selected:{light:"#222",dark:"#ffde98"}}),pe=d("mode",{default:{light:"white",dark:"#292b2f"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),ue=d("mode",{default:{light:"#ccc",dark:"#595b60"},selected:{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}}),he=O(g)`
+    color: ${me};
+    background-color: ${pe};
+    border-color: ${ue};
+`,ge=d("mode",{default:{light:"#222",dark:"#b3d7f8"},selected:{light:"#222",dark:"#bcdefe"}}),be=d("mode",{default:{light:"rgb(242 249 255)",dark:"#292b2f"},selected:{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}}),fe=d("mode",{default:{light:"#b4d9ff",dark:"#4a5f79"},selected:{light:"#a0c1e3",dark:"#4a5f79"}}),ke=I("mode",{light:"#222",dark:"#bcdefe"}),Se=O(g)`
+    color: ${ge};
+    background-color: ${be};
+    border-color: ${fe};
 
     & .aics-content-section > span > label,
     & .aics-content-span {
-        color: ${re} !important;
+        color: ${ge} !important;
     }
 
     &.selected .aics-content-span,
     &.selected .aics-content-section > span > label {
-        color: ${pe} !important;
+        color: ${ke} !important;
     }
-`,ue=M("mode",{light:"#222",dark:"#ffde98"}),he=M("mode",{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}),ge=M("mode",{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}),fe=M("mode",{light:"#222",dark:"#bcdefe"}),be=M("mode",{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}),Se=M("mode",{light:"#a0c1e3",dark:"#4a5f79"}),ke=T(h)`
-    color: ${ue};
-    background-color: ${he};
-    border-color: ${ge};
+`,Ne=I("mode",{light:"#222",dark:"#ffde98"}),Ee=I("mode",{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}),Ce=I("mode",{light:"rgb(237, 211, 137)",dark:"rgb(109 102 81)"}),xe=I("mode",{light:"#222",dark:"#bcdefe"}),ye=I("mode",{light:"#d8edff",dark:"rgb(60 108 194 / 24%)"}),$e=I("mode",{light:"#a0c1e3",dark:"#4a5f79"}),ve=O(g)`
+    color: ${Ne};
+    background-color: ${Ee};
+    border-color: ${Ce};
 
     & a {
-        color: ${ue};
+        color: ${Ne};
     }
 
     &.tool-description {
-        color: ${fe};
-        background-color: ${be};
-        border-color: ${Se};
+        color: ${xe};
+        background-color: ${ye};
+        border-color: ${$e};
 
         .aics-content-span,
         .aics-content-section > span > label {
-            color: ${pe} !important;
+            color: ${ke} !important;
         }
 
         a {
-            color: ${pe};
+            color: ${ke};
         }
     }
-`,Ne=M("mode",{light:"#222",dark:"#ffde98"}),xe=T(g)`
-    color: ${B} !important;
+`,we=I("mode",{light:"#222",dark:"#ffde98"}),_e=O(b)`
+    color: ${q} !important;
     font-size: 10pt;
     
     & > span > label {
-        color: ${B} !important;
+        color: ${q} !important;
     }
 
     .selected & > span > label {
-        color: ${Ne} !important;
+        color: ${we} !important;
     }
-`,ye=i("mode",{default:{light:"inherit",dark:"inherit"},selected:{light:"#222",dark:"#ffde98"}}),Ce=M("mode",{light:"#222",dark:"#ffde98"}),Ee=M("mode",{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"}),$e=T(f)`
-    color: ${ye};
+`,Oe=d("mode",{default:{light:"inherit",dark:"inherit"},selected:{light:"#222",dark:"#ffde98"}}),Te=I("mode",{light:"#222",dark:"#ffde98"}),Pe=I("mode",{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"}),Ie=O(f)`
+    color: ${Oe};
     font-family: ${K};
     font-size: 10pt;
 
     .selected & {
-        color: ${Ce} !important;
+        color: ${Te} !important;
     }
-`,we=i("mode",{default:{light:"#007fff",dark:"#7dbdff"},selected:{light:"#fff",dark:"#fff"}}),ve=i("mode",{default:{light:"rgb(0 127 255 / 10%)",dark:"rgb(84 169 255 / 20%)"},selected:{light:"rgb(82 162 244)",dark:"rgb(47 98 161)"}}),Oe=T($e)`
-    color: ${we};
-    background-color: ${ve};
+`,ze=d("mode",{default:{light:"#007fff",dark:"#7dbdff"},selected:{light:"#fff",dark:"#fff"}}),Ae=d("mode",{default:{light:"rgb(0 127 255 / 10%)",dark:"rgb(84 169 255 / 20%)"},selected:{light:"rgb(82 162 244)",dark:"rgb(47 98 161)"}}),Me=O(Ie)`
+    color: ${ze};
+    background-color: ${Ae};
     font-family: ${K};
     padding: 2px 6px 2px 22px;
     border-radius: 4px;
@@ -118,17 +183,18 @@ import e,{createContext as t,useReducer as s,useEffect as l,forwardRef as n,useC
     }
 
     .selected & {
-        color: ${Ce} !important;
-        background-color: ${Ee};
+        color: ${Te} !important;
+        background-color: ${Pe};
     }
-`,Te=i("mode",{default:{light:"inherit",dark:"inherit"},selected:{light:"#fff",dark:"#ffde98"}}),_e=i("mode",{default:{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"},selected:{light:"rgb(82 162 244)",dark:"rgb(47 98 161)"}}),Ie=T(Oe)`
-    color: ${Te};
-    background-color: ${_e};
-`,Me=i("mode",{default:{light:"#666",dark:"#bbb"},selected:{light:"#222",dark:"#ffde98"}}),ze=i("mode",{default:{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),Pe=T($e)`
-    color: ${Me};
-    background-color: ${ze};
+`,je=d("mode",{default:{light:"inherit",dark:"inherit"},selected:{light:"#fff",dark:"#ffde98"}}),Le=d("mode",{default:{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"},selected:{light:"rgb(82 162 244)",dark:"rgb(47 98 161)"}}),Re=O(Me)`
+    color: ${je};
+    background-color: ${Le};
+`,Fe=d("mode",{default:{light:"#666",dark:"#bbb"},selected:{light:"#222",dark:"#ffde98"}}),Je=d("mode",{default:{light:"rgb(0 0 0 / 8%)",dark:"rgb(255 255 255 / 8%)"},selected:{light:"rgb(253 235 184)",dark:"rgb(73 69 61)"}}),Ve=O(Ie)`
+    color: ${Fe};
+    background-color: ${Je};
     margin: 0 4px;
     padding: 2px 6px;
     border-radius: 4px;
     display: inline-block;
-`;class Re extends b{getClassNames(e,t){const s=[];return e instanceof S&&(null!==e.selection_index&&s.push("selectable"),t===e.selection_index&&s.push("selected")),s}useStep(){return o(J)}useSelected(e){const t=this.useStep(),[s,n]=c(e.selected);return l((()=>{null!=t&&n(e.selection_index===t?.step)}),[t]),{selected:s,setSelected:n}}scrollToSelected(e){return()=>{void 0!==e&&e.scrollIntoView({behavior:"smooth",block:"center"})}}scrollOnSelected(e,t){return s=>{s&&e.current&&(t(e.current),e.current.scrollIntoView({behavior:"smooth",block:"center"}))}}contentContainsSelected(e,t){let s=this.selectableContainsSelected(e,t);return e.children.forEach((e=>{this.containsSelected(e,t)&&(s=!0)})),s}sectionConstainsSelected(e,t){let s=this.selectableContainsSelected(e,t);return e.spans.forEach((e=>{this.containsSelected(e,t)&&(s=!0)})),s}selectableContainsSelected(e,t){return null!==e.selection_index&&e.selection_index<=t}listContainsSelected(e,t){let s=!1;return e.items.forEach((e=>{this.containsSelected(e,t)&&(s=!0)})),s}containsSelected(e,t){return e instanceof k?this.listContainsSelected(e,t):e instanceof N?this.contentContainsSelected(e,t):e instanceof x?this.sectionConstainsSelected(e,t):e instanceof S&&this.selectableContainsSelected(e,t)}useCollapsed(e){const{element:t,setElement:s}=o(L),n=this.useStep(),[r,d]=c(e.collapsed);l((()=>{null!=n&&d(!this.containsSelected(e,n.step))}),[n]);return{collapsed:r,toggleCollapsed:a((e=>{d(!e),s(void 0)}),[r])}}gotoStep=e=>{const t=o(U);return()=>{void 0!==t&&null!==e.selection_index&&t?.({type:"goto",step:e.selection_index})}};buildNamedContent(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),{collapsed:i,toggleCollapsed:m}=this.useCollapsed(t),u=r(null);return t.classNames.has("prompt-named-content")?e.createElement(Q,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:m,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid}):e.createElement(p,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:m,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid})}buildListItem(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),{collapsed:i,toggleCollapsed:p}=this.useCollapsed(t),u=r(null);return t.classNames.has("prompt-tool-named-content")?e.createElement(te,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:p,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid}):t.classNames.has("prompt-named-content")?e.createElement(X,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:p,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid}):e.createElement(m,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:i,onToggle:p,selected:a,onSelected:this.scrollOnSelected(u,c),onTransitionEnd:this.scrollToSelected(n),key:t.uuid})}buildContent(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),i=r(null);return t.classNames.has("tool-response")?e.createElement(me,{ref:i,className:this.getClassNames(t,l?.step),content:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(ae,{ref:i,className:this.getClassNames(t,l?.step),content:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid})}buildList(t,s){const l=this.useStep();o(L);const n=r(null);return t.classNames.has("prompt-list")?e.createElement(se,{ref:n,className:this.getClassNames(t,l?.step),list:t,selected:!1,key:t.uuid}):e.createElement(u,{ref:n,className:this.getClassNames(t,l?.step),list:t,selected:!1,key:t.uuid})}buildSection(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),i=r(null);return t.classNames.has("code")?e.createElement(le,{ref:i,className:this.getClassNames(t,l?.step),code:t,selected:a,editable:!1,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("prompt-section")?e.createElement(xe,{ref:i,className:this.getClassNames(t,l?.step),section:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(g,{ref:i,className:this.getClassNames(t,l?.step),section:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid})}buildSpan(t,s){const l=this.useStep(),{element:n,setElement:c}=o(L),{selected:a,setSelected:d}=this.useSelected(t),i=r(null);return t.classNames.has("special-token")?e.createElement(Pe,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("tool-span")||t.classNames.has("tool")?t.classNames.has("prompt-span")?e.createElement(Ie,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(Oe,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("prompt-span")?e.createElement($e,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(f,{ref:i,className:this.getClassNames(t,l?.step),span:t,selected:a,onSelected:this.scrollOnSelected(i,c),onClick:this.gotoStep(t),key:t.uuid})}buildSentinal(t,s){const{element:l,setElement:n}=o(L),{selected:c,setSelected:a}=this.useSelected(t),d=r(null);return e.createElement(y,{ref:d,sentinal:t,selected:c,onSelected:this.scrollOnSelected(d,n),key:t.uuid})}}const Ae=new RegExp("<mark([^>]*)>(.*?)</mark>","gm"),Le=new RegExp('(\\w+)="([^"]*)"',"gm"),Ve=e=>{const t=new Map;let s;for(;null!==(s=Le.exec(e));)s.index===Le.lastIndex&&Le.lastIndex++,t.set(s[1],s[2]);return t},je=(e,t,s)=>{const l=new C(t);return s&&l.classNames.add("prompt-span"),l},Fe=(e,t)=>{const s=[];if("action"===e.type){const l=je(0,e.content,t);return e.step&&(l.selection_index=e.step),l.classNames.add("tool-span"),s.push(l),s}let l,n=0;const o=e.content;for(;null!==(l=Ae.exec(o));){if(l.index===Ae.lastIndex&&Ae.lastIndex++,l.index>n){const e=new C(o.substring(n,l.index));t&&e.classNames.add("prompt-span"),s.push(e)}const e=je(0,l[2],t),c=Ve(l[1]);c.has("class")&&e.classNames.add(c.get("class")),c.has("step")&&(e.selection_index=parseInt(c.get("step"))),s.push(e),n=l.index+l[0].length}if(n<o.length){const e=je(0,o.substring(n),t);s.push(e)}return s},Je=(e,t)=>{let s=new x;if(e.type){if("code"===e.type){s=new E;const t=s;e.language&&(t.language=e.language)}s.classNames.add(e.type)}t&&s.classNames.add("prompt-section"),e.step&&"action"!==e.type&&(s.selection_index=e.step);return e.label&&(s.name=e.label),s.spans=Fe({...e},t),s},Ue=e=>{const t=new N;return e.type&&t.classNames.add(e.type),t.children=e.sections.map((e=>Je(e,!1))),e.step&&(t.selection_index=e.step),t},qe=(e,t)=>{const s=new $(e.label);return e.type&&s.classNames.add(e.type),t&&s.classNames.add("prompt-named-content"),s.children=e.sections.map((e=>Je(e,t))),e.step&&(s.selection_index=e.step),s},Be=e=>{const t=new k;return t.classNames.add("prompt-list"),t.items=e.examples.map((e=>qe(e,!0))),t},De=e=>{const t=new k;return t.classNames.add("prompt-list"),t.items=e.tools.map((e=>{const t=qe(e,!0);return t.classNames.add("prompt-tool-named-content"),t})),t},Ge=e=>{const t=new $(e.label);return t.classNames.add("prompt-named-content"),e.type&&t.classNames.add(e.type),t.children=e.sections.map((e=>{switch(e.type){case"examples":return Be(e);case"scratchpad":return qe(e,!0);case"tools":return De(e);default:return Je(e,!0)}})),t},He=e=>{const t=new S;return e.step&&(t.selection_index=e.step),t},Ke=e=>{const t=new N;return e.type&&t.classNames.add(e.type),t.children=e.sections.map(Je),e.step&&(t.selection_index=e.step),t},Qe=e=>e.map((e=>{switch(e.type){case"tool-response":return Ke(e);case"prompt":return Ge(e);case"response":return Ue(e);case"sentinal":return He(e);default:throw new Error("Unknown message type: "+e.type)}})),We=({model:t})=>{let s=()=>{const e=JSON.parse(t.get("data"));return Qe(e)},l=()=>t.get("theme");const[n,o]=c(s()),[a,r]=c(l()),[d,i]=c(new Re),[p,m]=c(1),[u,h]=c();return t.on("change:data",(()=>{o(s())})),t.on("change:theme",(()=>{r(l())})),e.createElement(I,{theme:{mode:a}},e.createElement(q,{step:p,numSteps:0,onChange:()=>{}},e.createElement(w.Provider,{value:{factory:d,setFactory:i}},e.createElement(L.Provider,{value:{element:u,setElement:h}},e.createElement(v,{blocks:n})))))},Xe=({model:e,el:t})=>{O(t).render(d(We,{model:e}))};export{ke as DescriptionBlock,ae as ModelResponse,Re as PaperBlockFactory,se as PromptBlockList,X as PromptBlockListItem,xe as PromptContentSection,$e as PromptContentSpan,Q as PromptNamedContentBlock,Ie as PromptToolContentSpan,te as PromptToolListItem,V as ScrollFlagContext,L as SelectedElementContext,A as SelectedStepContext,Pe as SpecialTokenSpan,J as StepContext,U as StepDispatchContext,q as StepProvider,F as StepReducer,j as StepState,Oe as ToolContentSpan,me as ToolResponse,Ue as parseContent,qe as parseNamedContent,Ge as parsePrompt,Qe as parsePromptChain,Be as parsePromptExamples,Je as parseSection,He as parseSentinal,Fe as parseSpans,De as parseToolDefinitions,Ke as parseToolResponse,G as promptBgColor,H as promptBorderColor,K as promptFont,W as promptListItemBorderColor,B as promptTextColor,_e as promptToolBgColor,Te as promptToolTextColor,Xe as render,ye as spanTextColor,ze as specialTokenBgColor,Me as specialTokenTextColor,ve as toolBgColor,we as toolTextColor};
+`;class He extends k{getClassNames(e,t){const s=[];return e instanceof S&&(null!==e.selection_index&&s.push("selectable"),t===e.selection_index&&s.push("selected")),s}useStep(){return n(V)}useSelected(e){const t=this.useStep(),[s,a]=o(e.selected);return l((()=>{null!=t&&a(e.selection_index===t?.step)}),[t]),{selected:s,setSelected:a}}scrollToSelected(e){return()=>{void 0!==e&&e.scrollIntoView({behavior:"smooth",block:"center"})}}scrollOnSelected(e,t){return s=>{s&&e.current&&(t(e.current),e.current.scrollIntoView({behavior:"smooth",block:"center"}))}}getContentSelectedChildren(e,t){let s=this.getSelectableSelectedChildren(e,t);return e.children.forEach((e=>{s=s.concat(this.getSelectedChildren(e,t))})),s}getSectionSelectedChildren(e,t){let s=this.getSelectableSelectedChildren(e,t);return e.spans.forEach((e=>{s=s.concat(this.getSelectedChildren(e,t))})),s}getSelectableSelectedChildren(e,t){return e.selection_index&&e.selection_index<=t?[e]:[]}getListSelectedChildren(e,t){let s=[];return e.items.forEach((e=>{s=s.concat(this.getSelectedChildren(e,t))})),s}getStreamSelectedChildren(e,t){let s=[];return e.blocks.forEach((e=>{s=s.concat(this.getSelectedChildren(e,t))})),s}getSelectedChildren(e,t){return e instanceof N?this.getListSelectedChildren(e,t):e instanceof E?this.getContentSelectedChildren(e,t):e instanceof C?this.getSectionSelectedChildren(e,t):e instanceof S?this.getSelectableSelectedChildren(e,t):e instanceof x?this.getStreamSelectedChildren(e,t):[]}useCollapsed(e){const{element:t,setElement:s}=n(L),a=this.useStep(),[r,i]=o(e.collapsed);l((()=>{null!=a&&i(0===this.getSelectedChildren(e,a.step).length)}),[a]);return{collapsed:r,toggleCollapsed:c((e=>{i(!e),s(void 0)}),[r])}}gotoStep=e=>{const t=n(H);return()=>{void 0!==t&&null!==e.selection_index&&t?.({type:"goto",step:e.selection_index})}};buildNamedContent(t,s){const l=this.useStep(),{element:a,setElement:o}=n(L),{selected:c,setSelected:i}=this.useSelected(t),{collapsed:d,toggleCollapsed:p}=this.useCollapsed(t),u=r(null);return t.classNames.has("prompt-named-content")?e.createElement(Q,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:d,onToggle:p,selected:c,onSelected:this.scrollOnSelected(u,o),onTransitionEnd:this.scrollToSelected(a),key:t.uuid}):e.createElement(m,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:d,onToggle:p,selected:c,onSelected:this.scrollOnSelected(u,o),onTransitionEnd:this.scrollToSelected(a),key:t.uuid})}buildListItem(t,s){const l=this.useStep(),{element:a,setElement:o}=n(L),{selected:c,setSelected:i}=this.useSelected(t),{collapsed:d,toggleCollapsed:m}=this.useCollapsed(t),u=r(null);return t.classNames.has("prompt-tool-named-content")?e.createElement(te,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:d,onToggle:m,selected:c,onSelected:this.scrollOnSelected(u,o),onTransitionEnd:this.scrollToSelected(a),key:t.uuid}):t.classNames.has("prompt-named-content")?e.createElement(X,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:d,onToggle:m,selected:c,onSelected:this.scrollOnSelected(u,o),onTransitionEnd:this.scrollToSelected(a),key:t.uuid}):e.createElement(p,{ref:u,className:this.getClassNames(t,l?.step),content:t,collapsed:d,onToggle:m,selected:c,onSelected:this.scrollOnSelected(u,o),onTransitionEnd:this.scrollToSelected(a),key:t.uuid})}buildContent(t,s){const l=this.useStep(),{element:a,setElement:o}=n(L),{selected:c,setSelected:i}=this.useSelected(t),d=r(null);return t.classNames.has("tool-response")?e.createElement(Se,{ref:d,className:this.getClassNames(t,l?.step),content:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(he,{ref:d,className:this.getClassNames(t,l?.step),content:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid})}buildList(t,s){const l=this.useStep();n(L);const a=r(null);return t.classNames.has("prompt-list")?e.createElement(se,{ref:a,className:this.getClassNames(t,l?.step),list:t,selected:!1,key:t.uuid}):e.createElement(u,{ref:a,className:this.getClassNames(t,l?.step),list:t,selected:!1,key:t.uuid})}buildSection(t,s){const l=this.useStep(),{element:a,setElement:o}=n(L),{selected:c,setSelected:i}=this.useSelected(t),d=r(null);return t.classNames.has("code")?e.createElement(de,{ref:d,className:this.getClassNames(t,l?.step),code:t,selected:c,editable:!1,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("prompt-section")?e.createElement(_e,{ref:d,className:this.getClassNames(t,l?.step),section:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(b,{ref:d,className:this.getClassNames(t,l?.step),section:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid})}buildSpan(t,s){const l=this.useStep(),{element:a,setElement:o}=n(L),{selected:c,setSelected:i}=this.useSelected(t),d=r(null);return t.classNames.has("special-token")?e.createElement(Ve,{ref:d,className:this.getClassNames(t,l?.step),span:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("tool-span")||t.classNames.has("tool")?t.classNames.has("prompt-span")?e.createElement(Re,{ref:d,className:this.getClassNames(t,l?.step),span:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(Me,{ref:d,className:this.getClassNames(t,l?.step),span:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):t.classNames.has("prompt-span")?e.createElement(Ie,{ref:d,className:this.getClassNames(t,l?.step),span:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid}):e.createElement(f,{ref:d,className:this.getClassNames(t,l?.step),span:t,selected:c,onSelected:this.scrollOnSelected(d,o),onClick:this.gotoStep(t),key:t.uuid})}buildSentinal(t,s){const{element:l,setElement:a}=n(L),{selected:o,setSelected:c}=this.useSelected(t),i=r(null);return e.createElement(y,{ref:i,sentinal:t,selected:o,onSelected:this.scrollOnSelected(i,a),key:t.uuid})}buildStream(t,s){const a=this.useStep(),[n,c]=o(1),i=r(null);return l((()=>{null!=a&&this.getSelectedChildren(t,a.step)&&t.blocks.forEach((e=>{e.iteration&&this.getSelectedChildren(e,a.step)&&c(e.iteration)}))}),[a]),e.createElement(ie,{ref:i,stream:t,page:n,setPage:c,key:t.uuid})}}const Ue=new RegExp("<mark([^>]*)>(.*?)</mark>","gm"),qe=new RegExp('(\\w+)="([^"]*)"',"gm"),Be=e=>{const t=new Map;let s;for(;null!==(s=qe.exec(e));)s.index===qe.lastIndex&&qe.lastIndex++,t.set(s[1],s[2]);return t},De=(e,t,s)=>{const l=new $(t);return s&&l.classNames.add("prompt-span"),l},Ge=(e,t)=>{const s=[];if("action"===e.type){const l=De(0,e.content,t);return e.step&&(l.selection_index=e.step),l.classNames.add("tool-span"),s.push(l),s}let l,a=0;const n=e.content;for(;null!==(l=Ue.exec(n));){if(l.index===Ue.lastIndex&&Ue.lastIndex++,l.index>a){const e=new $(n.substring(a,l.index));t&&e.classNames.add("prompt-span"),s.push(e)}const e=De(0,l[2],t),o=Be(l[1]);o.has("class")&&e.classNames.add(o.get("class")),o.has("step")&&(e.selection_index=parseInt(o.get("step"))),s.push(e),a=l.index+l[0].length}if(a<n.length){const e=De(0,n.substring(a),t);s.push(e)}return s},Ke=(e,t)=>{let s=new C;if(e.type){if("code"===e.type){s=new v;const t=s;e.language&&(t.language=e.language)}s.classNames.add(e.type)}t&&s.classNames.add("prompt-section"),e.step&&"action"!==e.type&&(s.selection_index=e.step);return e.label&&(s.name=e.label),s.spans=Ge({...e},t),s},Qe=e=>{const t=new E;return e.type&&t.classNames.add(e.type),t.children=e.sections.map((e=>Ke(e,!1))),e.step&&(t.selection_index=e.step),e.iteration&&(t.iteration=e.iteration),t},We=(e,t)=>{const s=new w(e.label);return e.type&&s.classNames.add(e.type),t&&s.classNames.add("prompt-named-content"),s.children=e.sections.map((e=>Ke(e,t))),e.step&&(s.selection_index=e.step),e.iteration&&(s.iteration=e.iteration),s},Xe=e=>{const t=new N;return t.classNames.add("prompt-list"),t.items=e.examples.map((e=>We(e,!0))),t},Ye=e=>{const t=new N;return t.classNames.add("prompt-list"),t.items=e.tools.map((e=>{const t=We(e,!0);return t.classNames.add("prompt-tool-named-content"),t})),t},Ze=e=>{const t=new w(e.label);return t.classNames.add("prompt-named-content"),e.type&&t.classNames.add(e.type),e.iteration&&(t.iteration=e.iteration),t.children=e.sections.map((e=>{switch(e.type){case"examples":return Xe(e);case"scratchpad":return We(e,!0);case"tools":return Ye(e);default:return Ke(e,!0)}})),t},et=e=>{const t=new S;return e.step&&(t.selection_index=e.step),e.iteration&&(t.iteration=e.iteration),t},tt=e=>{const t=new E;return e.type&&t.classNames.add(e.type),t.children=e.sections.map(Ke),e.step&&(t.selection_index=e.step),e.iteration&&(t.iteration=e.iteration),t},st=e=>{const t=new x;return e.name&&(t.name=e.name),t.blocks=e.blocks,t},lt=(e,t="1")=>{let s=[{id:t,blocks:[]}],l=s[s.length-1];return e.label&&(l.name=e.label),e.trajectory.map((e=>{if(l=s[s.length-1],s.length>1&&e.chain.id===s[s.length-2].id){const e=s.pop();l=s[s.length-1],e&&e.blocks.length>0&&l.blocks.push(st(e))}else if(e.chain.id!==l.id){const t={id:e.chain.id,blocks:[]};e.label&&(t.name=e.label),s.push(t),l=s[s.length-1]}switch(e.type){case"tool-response":l.blocks.push(tt(e));break;case"prompt":l.blocks.push(Ze(e));break;case"response":l.blocks.push(Qe(e));break;case"sentinal":l.blocks.push(et(e));break;default:throw new Error("Unknown message type: "+e.type)}})),st(l)},at=({model:t})=>{let s=()=>{const e=JSON.parse(t.get("data"));return lt(e)},l=()=>t.get("theme");const[a,n]=o(s()),[c,r]=o(l()),[i,d]=o(new He),[m,p]=o(1),[u,g]=o();return t.on("change:data",(()=>{n(s())})),t.on("change:theme",(()=>{r(l())})),e.createElement(P,{theme:{mode:c}},e.createElement(U,{step:m,numSteps:0,onChange:()=>{}},e.createElement(h.Provider,{value:{factory:i,setFactory:d}},e.createElement(L.Provider,{value:{element:u,setElement:g}},e.createElement(ie,{stream:a,page:1,setPage:()=>{},key:a.uuid})))))},nt=({model:e,el:t})=>{_(t).render(i(at,{model:e}))};export{ie as BlockStream,re as BlockStreamComponent,ve as DescriptionBlock,he as ModelResponse,He as PaperBlockFactory,se as PromptBlockList,X as PromptBlockListItem,_e as PromptContentSection,Ie as PromptContentSpan,Q as PromptNamedContentBlock,Re as PromptToolContentSpan,te as PromptToolListItem,R as ScrollFlagContext,L as SelectedElementContext,j as SelectedStepContext,Ve as SpecialTokenSpan,V as StepContext,H as StepDispatchContext,U as StepProvider,J as StepReducer,F as StepState,Me as ToolContentSpan,Se as ToolResponse,Qe as parseContent,We as parseNamedContent,Ze as parsePrompt,lt as parsePromptChain,Xe as parsePromptExamples,Ke as parseSection,et as parseSentinal,Ge as parseSpans,Ye as parseToolDefinitions,tt as parseToolResponse,D as promptBgColor,G as promptBorderColor,K as promptFont,W as promptListItemBorderColor,q as promptTextColor,Le as promptToolBgColor,je as promptToolTextColor,nt as render,Oe as spanTextColor,Je as specialTokenBgColor,Fe as specialTokenTextColor,Ae as toolBgColor,ze as toolTextColor};
+//# sourceMappingURL=library.js.map

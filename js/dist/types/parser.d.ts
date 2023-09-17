@@ -1,11 +1,15 @@
-import { Base, Content, List, NamedContent, Section, Selectable, Span } from 'ai-construction-set';
-export declare const parseSpans: (json: any, inPrompt: boolean) => Span[];
-export declare const parseSection: (json: any, inPrompt: boolean) => Section;
-export declare const parseContent: (json: any) => Content;
-export declare const parseNamedContent: (json: any, inPrompt: boolean) => NamedContent;
-export declare const parsePromptExamples: (json: any) => List;
-export declare const parseToolDefinitions: (json: any) => List;
-export declare const parsePrompt: (json: any) => NamedContent;
-export declare const parseSentinal: (json: any) => Selectable;
-export declare const parseToolResponse: (json: any) => Content;
-export declare const parsePromptChain: (json: any[]) => Base[];
+import { Content, List, NamedContent, Section, Selectable, Span, Stream } from 'ai-construction-set';
+type JsonData = {
+    [name: string]: any;
+};
+export declare const parseSpans: (json: JsonData, inPrompt: boolean) => Span[];
+export declare const parseSection: (json: JsonData, inPrompt: boolean) => Section;
+export declare const parseContent: (json: JsonData) => Content;
+export declare const parseNamedContent: (json: JsonData, inPrompt: boolean) => NamedContent;
+export declare const parsePromptExamples: (json: JsonData) => List;
+export declare const parseToolDefinitions: (json: JsonData) => List;
+export declare const parsePrompt: (json: JsonData) => NamedContent;
+export declare const parseSentinal: (json: JsonData) => Selectable;
+export declare const parseToolResponse: (json: JsonData) => Content;
+export declare const parsePromptChain: (json: JsonData, id?: string) => Stream;
+export {};

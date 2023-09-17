@@ -1,11 +1,12 @@
 // import '@vscode/codicons/dist/codicon.css';
-import { Base, BlockFactory, BlockFactoryContext, BlockStream } from "ai-construction-set";
+import { BlockFactory, BlockFactoryContext, Stream } from "ai-construction-set";
 // import 'devicon/devicon.min.css';
 import React, { createElement, useState } from "react";
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from "styled-components";
 import { SelectedElementContext, StepProvider } from "./StepContext";
 import { PaperBlockFactory } from "./components/BlockFactory";
+import { BlockStream } from "./components/BlockStream";
 // import './css/codicon.css';
 // import './css/inter.css';
 // import './css/material.css';
@@ -22,20 +23,20 @@ type WidgetProps = {
 };
 
 export const Widget = ({model}: WidgetProps) => {
-    let getData = () => {
+    let getStream = (): Stream => {
         const json_data = JSON.parse(model.get("data"));
         return parsePromptChain(json_data);
     };
     let getTheme = () => model.get("theme");
 
-    const [data, setData] = useState<Base[]>(getData());
+    const [stream, setStream] = useState<Stream>(getStream());
     const [theme, setTheme] = useState(getTheme());
     const [factory, setFactory] = useState<BlockFactory>(new PaperBlockFactory());
     const [step, setStep] = useState(1);
     const [element, setElement] = useState<HTMLElement>();
 
     model.on("change:data", () => {
-        setData(getData());
+        setStream(getStream());
     });
 
     model.on("change:theme", () => {
@@ -46,7 +47,7 @@ export const Widget = ({model}: WidgetProps) => {
     <StepProvider step={step} numSteps={0} onChange={()=>{}}>
     <BlockFactoryContext.Provider value={{ factory, setFactory }}>
     <SelectedElementContext.Provider value={{ element, setElement }}>
-        <BlockStream blocks={data} />
+        <BlockStream stream={stream} page={1} setPage={()=>{}} key={stream.uuid}/>
     </SelectedElementContext.Provider>
     </BlockFactoryContext.Provider>
     </StepProvider>

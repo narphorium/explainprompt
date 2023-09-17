@@ -39,8 +39,8 @@ export const PromptNamedContentBlock = styled(NamedBlock)`
         color: ${selectedTextColor};
     }
 
-    & .aics-collapsible-block-control {
-        color: ${promptTextColor};
+    & .aics-collapsible-block-control svg path {
+        fill: ${promptTextColor};
     }
 `;
 

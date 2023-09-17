@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field, SerializeAsAny
 
 
 class Loggable(BaseModel):
+    iteration: Optional[int] = Field(
+        None, description="Differentiates content between multiple iterations of the same chain")
 
     def remove_steps(self) -> 'Loggable':
         ...
@@ -80,8 +82,9 @@ PromptSection = Union[Section, FewShotExamples, ToolDefinitions, Scratchpad]
 
 
 class PromptChain(Loggable):
+    id: str = Field(..., description="The id of the prompt chain")
     label: Optional[str] = Field(None, description="The label of the prompt chain")
-    sub_chains: List['PromptChain'] = Field([], description="The sub-chains in the trajectory")
+    sub_chains: List[str] = Field([], description="The sub-chains in the trajectory")
 
 
 class PromptChainMessage(Selectable):

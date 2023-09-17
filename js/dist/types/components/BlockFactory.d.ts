@@ -1,4 +1,4 @@
-import { Base, Content, DefaultBlockFactory, List, NamedContent, Section, Selectable, Span } from 'ai-construction-set';
+import { Base, Content, DefaultBlockFactory, List, NamedContent, Section, Selectable, Span, Stream } from 'ai-construction-set';
 import React from 'react';
 export declare class PaperBlockFactory extends DefaultBlockFactory {
     getClassNames(block: Base, selected_index?: number): string[];
@@ -9,11 +9,12 @@ export declare class PaperBlockFactory extends DefaultBlockFactory {
     };
     scrollToSelected(element: HTMLElement | undefined): () => void;
     scrollOnSelected(ref: React.RefObject<any>, setElement: (e: HTMLElement) => void): (selected: boolean) => void;
-    contentContainsSelected(block: Content, selected_index: number): boolean;
-    sectionConstainsSelected(block: Section, selected_index: number): boolean;
-    selectableContainsSelected(block: Selectable, selected_index: number): boolean;
-    listContainsSelected(block: List, selected_index: number): boolean;
-    containsSelected(block: Base, selected_index: number): boolean;
+    getContentSelectedChildren(block: Content, selected_index: number): Base[];
+    getSectionSelectedChildren(block: Section, selected_index: number): Base[];
+    getSelectableSelectedChildren(block: Selectable, selected_index: number): Base[];
+    getListSelectedChildren(block: List, selected_index: number): Base[];
+    getStreamSelectedChildren(block: Stream, selected_index: number): Base[];
+    getSelectedChildren(block: Base, selected_index: number): Base[];
     useCollapsed(block: NamedContent): {
         collapsed: boolean;
         toggleCollapsed: (c: boolean) => void;
@@ -26,4 +27,5 @@ export declare class PaperBlockFactory extends DefaultBlockFactory {
     buildSection(block: Section, parent?: Base): JSX.Element;
     buildSpan(block: Span, parent?: Base): JSX.Element;
     buildSentinal(block: Selectable, parent?: Base): JSX.Element;
+    buildStream(stream: Stream, parent?: Base): JSX.Element;
 }
