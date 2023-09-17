@@ -1,4 +1,4 @@
-import { BlockFactoryContext, Stream } from 'ai-construction-set';
+import { BlockFactoryContext, Stream, selectedVariants } from 'ai-construction-set';
 import React, { ForwardedRef, forwardRef, useContext } from 'react';
 import styled from 'styled-components';
 import { Pagination } from './Pagination';
@@ -55,10 +55,37 @@ export const BlockStreamComponent = forwardRef(({className, stream, page, setPag
     }
 });
 
+const textColor = selectedVariants('mode', {
+    default: { light: '#eee', dark: '#333' },
+    selected: { light: '#222', dark: '#ffde98' },
+});
+
 export const BlockStream = styled(BlockStreamComponent)`
-margin-top: 4px;
+margin-top: 12px;
+margin-bottom: 12px;
 
 .aics-block-stream .aics-block-stream-content {
     margin-left: 24px;
+}
+
+label {
+    font-size: 12px;
+    color: ${textColor};
+    margin-right: 8px;
+    margin-left: 24px;
+}
+
+& > label {
+    font-size: 10pt;
+    color: #eee;
+    margin-right: 8px;
+    background-color: rgb(0 0 0 / 30%);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.aics-pagination {
+    display: inline-block;
+    vertical-align: top;
 }
 `;

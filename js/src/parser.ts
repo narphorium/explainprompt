@@ -215,10 +215,6 @@ export const parsePromptChain = (json: JsonData, id = "1"): Stream => {
     let current_data: JsonData[] = [{'id': id, 'blocks':[]}];
     let current_current_data = current_data[current_data.length - 1];
 
-    if (json['label']) {
-        current_current_data['name'] = json['label'];
-    }
-
     json['trajectory'].map((m: any) => {
         current_current_data = current_data[current_data.length - 1];
         if (current_data.length > 1 && m['chain']['id'] === current_data[current_data.length - 2]['id']) {
@@ -233,8 +229,8 @@ export const parsePromptChain = (json: JsonData, id = "1"): Stream => {
             // If we're going down the chain, push the current data
             
             const new_data: JsonData = {'id': m['chain']['id'], 'blocks':[]};
-            if (m['label']) {
-                new_data['name'] = m['label'];
+            if (m['chain']['label']) {
+                new_data['name'] = m['chain']['label'];
             }
 
             current_data.push(new_data);
