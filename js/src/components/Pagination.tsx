@@ -39,11 +39,10 @@ export const PaginationComponent = ({className, page, numPages, showEnds, setPag
     };
 
     const gotoPage = React.useCallback((new_page: number) => {
-        setPage(new_page);
-        // new_page = Math.min(numPages,  Math.max(1, new_page));
-        // if (new_page !== page) {
-        //     setPage(page);
-        // }
+        new_page = Math.min(numPages,  Math.max(1, new_page));
+        if (new_page !== page) {
+            setPage(new_page);
+        }
     }, [page, setPage]);
 
     const gotoStart = React.useCallback(() => {
