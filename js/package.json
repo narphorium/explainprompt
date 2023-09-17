@@ -1,6 +1,6 @@
 {
   "name": "explainprompt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A set of building blocks for building tools for thought powered by AI.",
   "module": "dist/library.js",
   "types": "dist/types/index.d.ts",
@@ -10,8 +10,9 @@
   "jsx": "react-jsx",
   "scripts": {
     "build:clean": "rimraf dist",
-    "build": "rollup -c --bundleConfigAsCjs && cp dist/widget.js ../python/explainprompt/jupyter/widget.js",
-    "prepare": "relative-deps"
+    "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
+    "build:widget": "rollup --config rollup-widget.config.js --bundleConfigAsCjs && cp dist/widget.js ../python/explainprompt/jupyter/widget.js",
+    "prepare": "rm -Rf ./node_modules/ai-construction-set && relative-deps"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,9 @@
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.6.1",
     "typescript": "^5.1.6"
+  },
+  "relativeDependencies": {
+    "ai-construction-set": "/Users/simister/Documents/GitHub/ai-construction-set"
   },
   "peerDependencies": {
     "@codemirror/lang-python": "^6.1.3",
