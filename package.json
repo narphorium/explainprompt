@@ -12,7 +12,7 @@
     "build:clean": "rimraf dist",
     "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
     "build:widget": "rollup --config rollup-widget.config.js --bundleConfigAsCjs && cp js/dist/widget.js python/explainprompt/jupyter/widget.js",
-    "prepare": "rm -Rf ./node_modules/ai-construction-set && relative-deps"
+    "relative-deps": "rm -Rf ./node_modules/ai-construction-set && relative-deps"
   },
   "repository": {
     "type": "git",
