@@ -67,11 +67,11 @@ export const PaginationComponent = ({className, page, numPages, showEnds, setPag
 
     if (showEnds === true) {
         return <div className={getClasses()}>
-            <button className={"button-start " + btn1} title="Return to start [home]" onClick={gotoStart}><span className="material-icons material-icons-outlined">first_page</span></button>
-            <button className={"button-end " + btn2} title="Previous step [←]" onClick={previousStep}><span className="material-icons material-icons-outlined">chevron_left</span></button>
+            <button className={"button-start " + btn1} title="Return to start" onClick={gotoStart}><span className="material-icons material-icons-outlined">first_page</span></button>
+            <button className={"button-end " + btn2} title="Previous page" onClick={previousStep}><span className="material-icons material-icons-outlined">chevron_left</span></button>
             <span className="page">{ page } of { numPages }</span>
-            <button className={"button-start " + btn3} title="Next step [→]" onClick={nextStep}><span className="material-icons material-icons-outlined">chevron_right</span></button>
-            <button className={"button-end " + btn4} title="Jump to end [end]" onClick={gotoEnd}><span className="material-icons material-icons-outlined">last_page</span></button>
+            <button className={"button-start " + btn3} title="Next page" onClick={nextStep}><span className="material-icons material-icons-outlined">chevron_right</span></button>
+            <button className={"button-end " + btn4} title="Jump to end" onClick={gotoEnd}><span className="material-icons material-icons-outlined">last_page</span></button>
         </div>;
     } else {
         return <div className={getClasses()}>

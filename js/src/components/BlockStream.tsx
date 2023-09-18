@@ -40,7 +40,7 @@ export const BlockStreamComponent = forwardRef(({className, stream, page, setPag
             <Pagination page={page} numPages={numPages} setPage={setPage} />
             <div className='aics-block-stream-content'>
             { stream.blocks.filter((block) => block.iteration === page).map((block, index) => {
-                return factory?.build(block);
+                return factory?.build(block, stream);
             }) }
             </div>
         </div>;
@@ -48,7 +48,7 @@ export const BlockStreamComponent = forwardRef(({className, stream, page, setPag
         return <div ref={ref} className={getClasses()}>
             <div className='aics-block-stream-content'>
             { stream.blocks.map((block, index) => {
-                return factory?.build(block);
+                return factory?.build(block, stream);
             }) }
             </div>
         </div>;
@@ -68,17 +68,11 @@ margin-bottom: 12px;
     margin-left: 24px;
 }
 
-label {
-    font-size: 12px;
-    color: ${textColor};
-    margin-right: 8px;
-    margin-left: 24px;
-}
-
 & > label {
     font-size: 10pt;
     color: #eee;
     margin-right: 8px;
+    margin-left: 24px;
     background-color: rgb(0 0 0 / 30%);
     padding: 3px 8px;
     border-radius: 4px;
