@@ -5,3 +5,8 @@
 python/build
 *.egg-info
 .env
+
+node_modules
+
+.pyc
+__pycache__

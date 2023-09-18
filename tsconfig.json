@@ -8,9 +8,9 @@
         "module": "ESNext",
         "lib": ["DOM", "ESNext"],
         "declaration": true,
-        "declarationDir": "dist/types",
+        "declarationDir": "js/dist/types",
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "js/dist",
         "moduleResolution": "node",
         "emitDeclarationOnly": true,
         "allowSyntheticDefaultImports": true,
@@ -19,12 +19,12 @@
         "noEmit": false
     },
     "include": [
-        "src/**/*"
+        "js/src/**/*"
     ],
     "exclude": [
-        "dist",
+        "js/dist",
         "node_modules",
-        "src/**/*.test.tsx",
-        "src/**/*.stories.tsx"
+        "js/src/**/*.test.tsx",
+        "js/src/**/*.stories.tsx"
     ]
 }

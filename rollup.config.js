@@ -6,9 +6,9 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 
 export default {
-  input: "src/index.ts",
+  input: "js/src/index.ts",
   output: {
-    file: "dist/library.js",
+    file: "js/dist/library.js",
     format: "esm",
     sourcemap: true,
   },

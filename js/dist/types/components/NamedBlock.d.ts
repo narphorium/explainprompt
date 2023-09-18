@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import theme from 'styled-theming';
 export declare const promptTextColor: (props: any) => string;
 export declare const promptBgColor: (props: any) => string;

@@ -2,16 +2,16 @@
   "name": "explainprompt",
   "version": "0.0.2",
   "description": "A set of building blocks for building tools for thought powered by AI.",
-  "module": "dist/library.js",
-  "types": "dist/types/index.d.ts",
+  "module": "js/dist/library.js",
+  "types": "js/dist/types/index.d.ts",
   "files": [
-    "dist/**/*"
+    "js/dist/**/*"
   ],
   "jsx": "react-jsx",
   "scripts": {
     "build:clean": "rimraf dist",
     "build": "rollup --config rollup.config.js --bundleConfigAsCjs",
-    "build:widget": "rollup --config rollup-widget.config.js --bundleConfigAsCjs && cp dist/widget.js ../python/explainprompt/jupyter/widget.js",
+    "build:widget": "rollup --config rollup-widget.config.js --bundleConfigAsCjs && cp js/dist/widget.js python/explainprompt/jupyter/widget.js",
     "prepare": "rm -Rf ./node_modules/ai-construction-set && relative-deps"
   },
   "repository": {

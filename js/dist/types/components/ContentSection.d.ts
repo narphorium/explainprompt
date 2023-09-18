@@ -1,4 +1,3 @@
-/// <reference types="react" />
 export declare const PromptContentSection: import("styled-components").IStyledComponent<"web", {
     className?: string | string[] | undefined;
     section: import("ai-construction-set").Section;

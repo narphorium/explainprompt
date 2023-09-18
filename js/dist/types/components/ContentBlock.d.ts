@@ -1,4 +1,3 @@
-/// <reference types="react" />
 export declare const ModelResponse: import("styled-components").IStyledComponent<"web", {
     className?: string | string[] | undefined;
     content: import("ai-construction-set").Content;

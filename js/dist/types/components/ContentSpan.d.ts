@@ -1,4 +1,3 @@
-/// <reference types="react" />
 export declare const spanTextColor: (props: any) => string;
 export declare const PromptContentSpan: import("styled-components").IStyledComponent<"web", {
     className?: string | string[] | undefined;
